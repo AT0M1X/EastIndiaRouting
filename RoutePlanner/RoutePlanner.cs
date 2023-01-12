@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using Dijkstra.NET.Graph.Simple;
 using EIT.Service;
+using EIT.DTOs;
 
 namespace EIT.RoutePlanner
 {
@@ -18,17 +19,19 @@ namespace EIT.RoutePlanner
 
         private readonly CityService _cityService;
         private readonly RouteService _routeService;
+        private readonly IExternalRouteService _externalRouteService;
 
-        public RoutePlanner(RouteService routeService, CityService cityService)
+        public RoutePlanner(RouteService routeService, CityService cityService, IExternalRouteService externalRouteService)
         {
             _routeService = routeService;
             _cityService = cityService;
+            _externalRouteService = externalRouteService;
         }
 
-        public RouteResult GetRoute(int from, int to, int weight)
+        public RouteResult GetRoute(int from, int to, FindRouteDto findRouteDto)
         {
             // Load topology
-            var topology = LoadTopology(weight);
+            var topology = LoadTopology(findRouteDto.Weight);
 
             // if we have both source city and destination city
             var ourAvailableCities = GetAvailableId();
@@ -37,7 +40,7 @@ namespace EIT.RoutePlanner
             {
                 ShortestPathResult result = topology.Dijkstra((uint)from, (uint)to); //result contains the shortest path
                 var path = result.GetPath().ToList(); // a list of integer starting from source, to destination
-                var cost = GetRouteCost(path, weight);
+                var cost = GetRouteCost(path, findRouteDto.Weight);
                 var time = GetRouteTravelTime(path);
                 return new RouteResult { 
                     From= from,
@@ -62,13 +65,13 @@ namespace EIT.RoutePlanner
             }
             if(ourAvailableCities.Contains(to)) // give error
             {
-                
+                return null;
             }
 
             // if we are the destination city:
             // break, in this case we don't 
 
-            return new RouteResult { };
+            return null;
         }
 
         public IEnumerable<uint> GetRoutetwo(int from, int to, int weight)
