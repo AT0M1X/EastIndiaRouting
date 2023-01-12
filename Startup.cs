@@ -1,5 +1,6 @@
 using System;
 using EIT.Model.Configuration;
+using EIT.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -36,6 +37,7 @@ namespace EIT
             });
 
             services.AddControllers();
+            AddServicesForDependencyInjection(services);
 
             services.AddCors(o => o.AddPolicy("MainPolicy", builder =>
             {
@@ -84,6 +86,12 @@ namespace EIT
                     spa.UseReactDevelopmentServer("start");
                 }
             });
+
+        }
+
+        private void AddServicesForDependencyInjection(IServiceCollection services)
+        {
+            services.AddSingleton<RouteService>();
 
         }
     }
