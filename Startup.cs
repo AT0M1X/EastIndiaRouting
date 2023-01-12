@@ -1,7 +1,9 @@
 using System;
 using EIT.Context;
 using EIT.Data;
+using EIT.Mappers;
 using EIT.Model.Configuration;
+using EIT.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -39,6 +41,9 @@ namespace EIT
             });
 
             services.AddControllers();
+            AddServicesForDependencyInjection(services);
+            AddDaoForDependencyInjection(services);
+            AddMappersForDependencyInjection(services);
 
             services.AddCors(o => o.AddPolicy("MainPolicy", builder =>
             {
@@ -90,6 +95,31 @@ namespace EIT
                 }
             });
 
+        }
+
+        private void AddServicesForDependencyInjection(IServiceCollection services)
+        {
+            services.AddSingleton<CityService>();
+            services.AddSingleton<PackageTypeService>();
+            services.AddSingleton<RoleService>();
+            services.AddSingleton<RouteService>();
+            services.AddSingleton<ServiceAccountService>();
+
+        }
+
+        private void AddDaoForDependencyInjection(IServiceCollection services)
+        {
+            services.AddSingleton<CityDao>();
+
+        }
+
+        private void AddMappersForDependencyInjection(IServiceCollection services)
+        {
+            services.AddSingleton<ICityMapper, CityMapperImpl>();
+            services.AddSingleton<IPackageTypeMapper, PackageTypeMapperImpl>();
+            services.AddSingleton<IRoleMapper, RoleMapperImpl>();
+            services.AddSingleton<IRouteMapper, RouteMapperImpl>();
+            services.AddSingleton<IServiceAccountMapper, ServiceAccountMapperImpl>();
         }
     }
 }

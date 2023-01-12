@@ -44,7 +44,6 @@ namespace EIT
             {
                 Log.CloseAndFlush();
             }
-            //var dao = new CityDao(new RoutingContext());
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
