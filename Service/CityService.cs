@@ -28,5 +28,11 @@ namespace EIT.Service
             var cityModel = _cityDao.GetCity(city);
             return _cityMapper.MapCityModelToDto(cityModel);
         }
+
+        public CityDto GetCity(string city)
+        {
+            var cityModel = _cityDao.GetCity(city);
+            return _cityMapper.MapCityModelToDto(cityModel);
+        }
     }
 }

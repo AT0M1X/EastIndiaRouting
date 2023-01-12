@@ -17,7 +17,10 @@ namespace EIT.Mappers
                 Id = route.RouteID,
                 From = route.OriginCity.CityName,
                 To = route.DestinationCity.CityName,
-                Time = route.Segments * 12
+                Time = route.Segments * 12,
+                Segments = route.Segments,
+                FromId=route.OriginCity.CityID,
+                ToId=route.DestinationCity.CityID
             };
         }
 

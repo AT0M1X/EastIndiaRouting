@@ -12,5 +12,11 @@ namespace EIT.DTOs
         public string To { get; set; }
         [Required]
         public int Time { get; set; }
+        [Required]
+        public int Segments { get; set; }
+        [Required]
+        public int FromId { get; set; }
+        [Required]
+        public int ToId { get; set; }
     }
 }

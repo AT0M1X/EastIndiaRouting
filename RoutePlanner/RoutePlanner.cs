@@ -7,6 +7,7 @@ using Dijkstra.NET.ShortestPath;
 using System;
 using System.Linq;
 using Dijkstra.NET.Graph.Simple;
+using EIT.Service;
 
 namespace EIT.RoutePlanner
 {
@@ -15,10 +16,13 @@ namespace EIT.RoutePlanner
         // TODO inject database and integration
         private int topology;
 
-        public RoutePlanner()
-        {
-            // Don't even need this shit
+        private readonly CityService _cityService;
+        private readonly RouteService _routeService;
 
+        public RoutePlanner(RouteService routeService, CityService cityService)
+        {
+            _routeService = routeService;
+            _cityService = cityService;
         }
 
         public RouteResult GetRoute(int from, int to, int weight)
@@ -27,8 +31,8 @@ namespace EIT.RoutePlanner
             var topology = LoadTopology(weight);
 
             // if we have both source city and destination city
-            var ourAvailableCities = MockCity.GetAvailableId();
-            Console.WriteLine(ourAvailableCities);
+            var ourAvailableCities = GetAvailableId();
+            
             if(ourAvailableCities.Contains(from) && ourAvailableCities.Contains(to)) 
             {
                 ShortestPathResult result = topology.Dijkstra((uint)from, (uint)to); //result contains the shortest path
@@ -90,22 +94,24 @@ namespace EIT.RoutePlanner
         private Graph<int, string> LoadTopology(int weight)
         {
             // var cities = db.getCities(); //(Id, Name, Available)
-            List<MockCity> mockCities = MockCity.GetMockCities();
+            //List<MockCity> mockCities = MockCity.GetMockCities();
+            var cities = _cityService.GetCities();
             // cities = cities.Where(x => x.Available);
 
             // var edges = db.getEdges(); //(Id, Source, Destination, Segments)
-            List<MockEdge> mockEdges = MockEdge.GetMockEdges();
+            //List<MockEdge> mockEdges = MockEdge.GetMockEdges();
+            var edges = _routeService.GetInternalRoutes();
 
             var graph = new Graph<int, string>();
 
-            foreach (var city in mockCities)
+            foreach (var city in cities)
             {
                 graph.AddNode(city.Id);
             }
 
-            foreach (var edge in mockEdges)
+            foreach (var edge in edges)
             {
-                graph.Connect((uint)edge.Source, (uint)edge.Destination, edge.Segments * GetSeasonalPrice(weight), "dummy string"); //First node has key equal 1
+                graph.Connect((uint)edge.FromId, (uint)edge.ToId, edge.Segments * GetSeasonalPrice(weight), "dummy string"); //First node has key equal 1
             }
 
             return graph;
@@ -184,6 +190,18 @@ namespace EIT.RoutePlanner
                 routeTravelTime += edge.Segments * 12; // 12 hours for each completed segment
             }
             return routeTravelTime;
+        }
+
+        public List<int> GetAvailableId()
+        {
+            var setCities = new HashSet<int>();
+            var edges = _routeService.GetInternalRoutes();
+            foreach (var edge in edges)
+            {
+                setCities.Add(edge.FromId);
+                setCities.Add(edge.ToId);
+            }
+            return setCities.ToList();
         }
     }
 }
