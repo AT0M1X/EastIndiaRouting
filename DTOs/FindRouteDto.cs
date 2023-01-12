@@ -17,9 +17,14 @@ namespace EIT.DTOs
         public int Width { get; set; }
         [Required]
         public int Height { get; set; }
+
         [Required]
         public string PackageType { get; set; }
         [Required]
         public DateTime SendTime { get; set; }
+        [Required]
+        public string Currency { get; set; }
+        [Required]
+        public bool Recommended { get; set; }
     }
 }

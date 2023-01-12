@@ -43,6 +43,7 @@ namespace EIT
 
             services.AddControllers();
             services.AddTransient<IRoutePlanner, RoutePlanner.RoutePlanner>();
+            services.AddTransient<IExternalRouteService, ExternalRouteService>();
             AddServicesForDependencyInjection(services);
             AddDaoForDependencyInjection(services);
             AddMappersForDependencyInjection(services);

@@ -37,7 +37,7 @@ namespace EIT.Service
                 throw new ArgumentException();
             }
 
-            return _routePlanner.GetRoute(origin.Id, destination.Id, findRouteDto.Weight);
+            return _routePlanner.GetRoute(origin.Id, destination.Id, findRouteDto);
         }
     }
 }

@@ -38,20 +38,31 @@ namespace EIT.Controllers
                     From = routeIntegrationRequest.From,
                     To = routeIntegrationRequest.To,
                     Height = routeIntegrationRequest.Height,
-                    Lenght = routeIntegrationRequest.Width,
+                    Lenght = routeIntegrationRequest.Depth,
                     Weight = routeIntegrationRequest.Weight,
                     Width = routeIntegrationRequest.Width,
                     PackageType = routeIntegrationRequest.Type,
                     SendTime = DateTime.Parse(routeIntegrationRequest.ArrivalTime),
-
+                    Currency = routeIntegrationRequest.Currency
                 });
+
+                if(route != null)
+                {
+                    return new RouteIntegrationResponse
+                    {
+                        CorrelationID = Guid.NewGuid().ToString(),
+                        Cost = route.Cost,
+                        Time = route.Time
+                    };
+                }
 
                 return new RouteIntegrationResponse
                 {
                     CorrelationID = Guid.NewGuid().ToString(),
-                    Cost = route.Cost,
-                    Time = route.Time
+                    Cost = 0,
+                    Time = 0
                 };
+
             }
             catch(ArgumentException)
             {
