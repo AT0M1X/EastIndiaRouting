@@ -18,12 +18,14 @@ namespace EIT.RoutePlanner
         private readonly CityService _cityService;
         private readonly RouteService _routeService;
         private readonly IExternalRouteService _externalRouteService;
+        private readonly WeightClassService _weightClassService;
 
-        public RoutePlanner(RouteService routeService, CityService cityService, IExternalRouteService externalRouteService)
+        public RoutePlanner(RouteService routeService, CityService cityService, IExternalRouteService externalRouteService, WeightClassService weightClassService)
         {
             _routeService = routeService;
             _cityService = cityService;
             _externalRouteService = externalRouteService;
+            _weightClassService = weightClassService;
         }
 
         public RouteResult GetRoute(int from, int to, FindRouteDto findRouteDto)
@@ -44,7 +46,7 @@ namespace EIT.RoutePlanner
                 if(path != null)
                 {
                     var cost = GetRouteCost(path, edges, findRouteDto.Weight);
-                    var time = GetRouteTravelTime(path);
+                    var time = GetRouteTravelTime(path, edges);
                     return new RouteResult
                     {
                         From = from,
@@ -97,38 +99,45 @@ namespace EIT.RoutePlanner
                         {
                             FromId = cityId,
                             ToId = to,
-                            Time = externalRouteResponse.Time
+                            Time = externalRouteResponse.Time,
+                            Segments = 0
                         });
                         edges.Add(new RouteDto
                         {
                             FromId = to,
                             ToId = cityId,
-                            Time = externalRouteResponse.Time
+                            Time = externalRouteResponse.Time,
+                            Segments = 0
                         });
                     }
                 }
 
                 ShortestPathResult result = topology.Dijkstra((uint)from, (uint)to); //result contains the shortest path
                 var path = result.GetPath().ToList(); // a list of integer starting from source, to destination
-                var cost = GetRouteCost(path, edges, findRouteDto.Weight);
-                var time = GetRouteTravelTime(path);
-                return new RouteResult
+                if(path != null)
                 {
-                    From = from,
-                    To = to,
-                    Cost = cost,
-                    Time = time,
-                    CostToCompetitors = 0
-                };
+                    var cost = GetRouteCost(path, edges, findRouteDto.Weight);
+                    var time = GetRouteTravelTime(path, edges);
+                    return new RouteResult
+                    {
+                        From = from,
+                        To = to,
+                        Cost = cost,
+                        Time = time,
+                        CostToCompetitors = GetCompetitorCost(path, edges)
+                    };
+                }
+                else
+                {
+                    return null;
+                }
+                
 
             }
             if(ourAvailableCities.Contains(to)) // give error
             {
                 return null;
             }
-
-            // if we are the destination city:
-            // break, in this case we don't 
 
             return null;
         }
@@ -152,27 +161,24 @@ namespace EIT.RoutePlanner
 
         private int GetSeasonalPrice(int weight)
         {
-            // load [WeightPrices](Id, Minimum, Maximum, Price)
-            var mockWeightPrices = MockWeightPrices.GetMockWeightPrices();
-            // make if else statement for the current month
-            // make nested if else statement for the current weight
+            var weightPrices = _weightClassService.GetWeightClasses();
             DateTime dt = DateTime.Now;
             var currentMonth = dt.Month; //integer between 1 and 12.
             if(currentMonth >= 5 && currentMonth <= 10) //May-Oct
             {
                 if(weight < 10) // kilogram
                 {
-                    var price = mockWeightPrices.Where(x => x.Id == 2).Single();
+                    var price = weightPrices.Where(x => x.Id == 2).Single();
                     return price.Price;
                 }
                 else if(weight < 50)
                 {
-                    var price = mockWeightPrices.Where(x => x.Id == 4).Single();
+                    var price = weightPrices.Where(x => x.Id == 4).Single();
                     return price.Price;
                 }
                 else
                 {
-                    var price = mockWeightPrices.Where(x => x.Id == 6).Single();
+                    var price = weightPrices.Where(x => x.Id == 6).Single();
                     return price.Price;
                 }
             }
@@ -180,17 +186,17 @@ namespace EIT.RoutePlanner
             {
                 if (weight < 10) // kilogram
                 {
-                    var price = mockWeightPrices.Where(x => x.Id == 1).Single();
+                    var price = weightPrices.Where(x => x.Id == 1).Single();
                     return price.Price;
                 }
                 else if (weight < 50)
                 {
-                    var price = mockWeightPrices.Where(x => x.Id == 3).Single();
+                    var price = weightPrices.Where(x => x.Id == 3).Single();
                     return price.Price;
                 }
                 else
                 {
-                    var price = mockWeightPrices.Where(x => x.Id == 5).Single();
+                    var price = weightPrices.Where(x => x.Id == 5).Single();
                     return price.Price;
                 }
             }
@@ -203,19 +209,26 @@ namespace EIT.RoutePlanner
             for (int i = 0; i < path.Count - 1; i++)
             {
                 var edge = GetEdge(edges, Convert.ToInt32(path[i]), Convert.ToInt32(path[i + 1]));
-                routeCost += edge.Segments * GetSeasonalPrice(weight);
+                if(edge.Segments != 0)
+                {
+                    routeCost += edge.Segments * GetSeasonalPrice(weight);
+                }
+                else
+                {
+                    routeCost += edge.Cost;
+                }
             }
             return routeCost;
         }
 
-        private int GetRouteTravelTime(List<uint> path)
+        private int GetRouteTravelTime(List<uint> path, List<RouteDto> edges)
         {
             //TODO: implement waiting time
             int routeTravelTime = 0;
             for (int i = 0; i < path.Count - 1; i++)
             {
-                MockEdge edge = MockEdge.GetMockEdge(Convert.ToInt32(path[i]), Convert.ToInt32(path[i + 1]));
-                routeTravelTime += edge.Segments * 12; // 12 hours for each completed segment
+                var edge = GetEdge(edges, Convert.ToInt32(path[i]), Convert.ToInt32(path[i + 1]));
+                routeTravelTime += edge.Time; // 12 hours for each completed segment
             }
             return routeTravelTime;
         }
@@ -235,6 +248,13 @@ namespace EIT.RoutePlanner
         private RouteDto GetEdge(List<RouteDto> edges, int from, int to)
         {
             return edges.Where(x => x.FromId == from && x.ToId == to).FirstOrDefault();
+        }
+
+        private int GetCompetitorCost(List<uint> path, List<RouteDto> edges)
+        {
+            var edge = GetEdge(edges, Convert.ToInt32(path[path.Count - 2]), Convert.ToInt32(path[path.Count - 1]));
+
+            return edge.Cost;
         }
     }
 }

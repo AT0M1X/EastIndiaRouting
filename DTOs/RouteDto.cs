@@ -18,5 +18,7 @@ namespace EIT.DTOs
         public int FromId { get; set; }
         [Required]
         public int ToId { get; set; }
+        [Required]
+        public int Cost { get; set; }
     }
 }
