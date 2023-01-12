@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import { RouteIntegrationRequest } from '../../services/swaggerapi/data-contracts'
 
 const FLabel = styled.label`
   display: inline-block;
@@ -12,8 +11,8 @@ const FLabel = styled.label`
   padding-bottom: 1.5rem;
   padding-right: 4px;
   padding-left: 10px;
-  max-width: 100px;
-  width: 100px;
+  max-width: 200px;
+  width: 200px;
 `
 
 const BaseInput = styled.input.attrs((props) => ({
@@ -29,7 +28,7 @@ const BaseInput = styled.input.attrs((props) => ({
     line-height: 2.4rem;
     padding: calc(8px - 1px) calc(16px - 1px);
     width: 100%;
-    max-width: 20rem;
+    max-width: 40rem;
     margin-top: 8px;
     margin-bottom: 8px;
     text-align: left;
@@ -61,10 +60,11 @@ const TextInput = styled(BaseInput).attrs((props) => ({
   `
 
 const PackageInfoContainer = styled.div`
-  max-width: 300px;
+  max-width: 500px;
   width: auto;
   background-color: #22AAA1;
   border-radius: 10px;
+  margin: auto;
 `
   
 const FormLabel = (props) => {
@@ -72,60 +72,54 @@ const FormLabel = (props) => {
     return <FLabel>{text}</FLabel>
   }
 
-interface PackageInfoInputProps {
-    InputData: RouteIntegrationRequest
-    handleChange?: (event: React.KeyboardEvent, value: string) => void
+interface CustomerInfo {
+    Customer?: string | undefined
+    Phone?: string | undefined
+    EMail?: string | undefined
   }
 
-const PackageInfoInput = (props: PackageInfoInputProps) => {
-const {InputData, handleChange} = props
+interface WhoComponentProps {
+    Customer?: CustomerInfo
+    handleInputChange?: (event: React.KeyboardEvent, value: string) => void
+  }
+
+const WhoComponent = (props: WhoComponentProps) => {
+    const { Customer, handleInputChange } = props
 
     return (
         <PackageInfoContainer>
             <RowContainer>
             <Content>
-                  <FormLabel text={'Weight:'} />
+                  <FormLabel text={'Sender:'} />
                   <InputContainer>
                     <TextInput
-                      onChange={handleChange}
-                      name={'weight'}
-                      value={InputData?.weight}
+                      onChange={handleInputChange}
+                      name={'Customer'}
+                      value={Customer?.Customer}
                     />
                   </InputContainer>
                 </Content>
               </RowContainer>
               <RowContainer>
                 <Content>
-                  <FormLabel text={'Height:'} />
+                  <FormLabel text={'Phone No:'} />
                   <InputContainer>
                     <TextInput
-                      onChange={handleChange}
-                      name={'height'}
-                      value={InputData?.height}
+                      onChange={handleInputChange}
+                      name={'Phone'}
+                      value={Customer?.Phone}
                     />
                   </InputContainer>
                 </Content>
               </RowContainer>
               <RowContainer>
                 <Content>
-                  <FormLabel text={'Width:'} />
+                  <FormLabel text={'E-Mail:'} />
                   <InputContainer>
                     <TextInput
-                      onChange={handleChange}
-                      name={'width'}
-                      value={InputData?.width}
-                    />
-                  </InputContainer>
-                </Content>
-              </RowContainer>
-              <RowContainer>
-                <Content>
-                  <FormLabel text={'Length:'} />
-                  <InputContainer>
-                    <TextInput
-                      onChange={handleChange}
-                      name={'depth'}
-                      value={InputData?.depth}
+                      onChange={handleInputChange}
+                      name={'EMail'}
+                      value={Customer?.EMail}
                     />
                   </InputContainer>
                 </Content>
@@ -135,4 +129,4 @@ const {InputData, handleChange} = props
     )
 }
 
-export default PackageInfoInput
+export default WhoComponent

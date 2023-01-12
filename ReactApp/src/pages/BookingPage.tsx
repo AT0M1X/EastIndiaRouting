@@ -12,12 +12,20 @@ import {
 } from "../services/swaggerapi/data-contracts";
 import styled, { css } from "styled-components";
 import WhatComponent from "../components/WhatComponent";
+import WhoComponent from "../components/WhoComponent";
+
+interface CustomerInfo {
+  Customer?: string | undefined
+  Phone?: string | undefined
+  EMail?: string | undefined
+}
 
 const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
   const [routeRequest, setRouteRequest] = useState<RouteIntegrationRequest>();
   const [title, setTitle] = useState<string>("Specify The Parameters of Your Parcel");
   const [stage, setStage] = useState<number>(1);
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>();
 
   const setDefaultRequest = () => {
     setRouteRequest({
@@ -33,7 +41,15 @@ const BookingPage = () => {
       depth: 0,
       recommended: false,
     });
+
+    setCustomerInfo({
+      ...customerInfo,
+      Customer: "",
+      Phone: "",
+      EMail: ""
+    });
   };
+
 
   useEffect(() => {
     const promise = FrontServiceApi.getAllPackageTypes();
@@ -79,6 +95,10 @@ const BookingPage = () => {
     setRouteRequest({ ...routeRequest, [e.target.name]: e.target.value })
   }
 
+  const handleCustomerInfoChange = (e) => {
+    setCustomerInfo({...customerInfo, [e.target.name]: e.target.value })
+  }
+
   const handelStage = (value: number) => {
     const newStage = stage + value;
     if(newStage > 0 && newStage < 6)
@@ -96,6 +116,9 @@ const BookingPage = () => {
         <MainView>
           { stage == 1 &&
             <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
+          }
+          { stage == 4 &&
+            <WhoComponent Customer={customerInfo!} handleInputChange={handleCustomerInfoChange} />
           }
         </MainView>
         <ButtonContainer>
