@@ -13,18 +13,30 @@ const HomePage: FunctionComponent = () => {
         <Banner>
           <div>The Best Parcel Delivery Service in Africa</div>
         </Banner>
+        <ButtonContainer>
+          <Button
+            onClick={() => {
+              console.log("asd");
+            }}
+          >
+            Sign in To Book
+          </Button>
+          <Button>Login</Button>
+        </ButtonContainer>
       </BottomContainer>
     </Page>
   );
 };
 
 const Button = styled.button`
-  background: transparent;
-  border-radius: 3px;
-  border: 2px solid palevioletred;
-  color: palevioletred;
+  background-color: #ffffff;
+  border-radius: 50px;
+  border: 2px solid #ffffff;
+  color: black;
   margin: 0.5em 1em;
   padding: 0.25em 1em;
+  hight: 50px;
+  width: 250px;
 `;
 
 const LogoContainer = styled.div`
@@ -47,6 +59,7 @@ const BottomContainer = styled.div`
   height: 20%;
   background-color: #22aaa1;
   bottom: 0;
+  flex-direction: column;
 `;
 
 const Logo = styled.div`
@@ -58,8 +71,9 @@ const Logo = styled.div`
   margin: auto;
 `;
 
-const HomeContainer = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
+  height: 40%;
 `;
 
 const Banner = styled.header`
