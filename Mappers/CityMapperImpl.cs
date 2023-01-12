@@ -12,7 +12,7 @@ namespace EIT.Mappers
             {
                 return null;
             }
-            return new CityDto() { Id = city.CityID, Name = city.Cityname};
+            return new CityDto() { Id = city.CityID, Name = city.CityName};
         }
 
         public List<CityDto> MapCityModelsToDtos(List<City> cities)

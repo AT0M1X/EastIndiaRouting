@@ -13,6 +13,7 @@ namespace EIT.Context
         public DbSet<PackageType> PackageTypes { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Route> Routes { get; set; }
+        public DbSet<ServiceAccount> ServiceAccounts { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<WeightClass> WeightClasses { get; set; }
     }

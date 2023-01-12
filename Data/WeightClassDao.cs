@@ -7,56 +7,48 @@ using System.Linq;
 
 namespace EIT.Data
 {
-    public class CityDao
+    public class WeightClassDao
     {
         private IServiceScopeFactory _serviceScopeFactory;
-        public CityDao(IServiceScopeFactory serviceScopeFactory) 
+        public WeightClassDao(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public List<City> GetAllCities()
+        public List<WeightClass> GetAllWeightClasses()
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.ToList();
+                return routingContext.WeightClasses.ToList();
             }
         }
 
-        public List<City> GetAvailableCities()
+        public WeightClass GetWeightClass(int id)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.Where(c => c.Available).ToList();
+                return routingContext.WeightClasses.Where(w => w.WeightClassID == id).FirstOrDefault();
             }
         }
 
-        public City GetCity(int id)
+
+        public WeightClass GetWeightClass(int minimumWeight, int maximumWeight)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.Where(c => c.CityID == id).FirstOrDefault();
+                return routingContext.WeightClasses.Where(w => w.MinimumWeight == minimumWeight && w.MaximumWeight == maximumWeight).FirstOrDefault();
             }
         }
 
-        public City GetCity(string name)
+        public void AddWeightClass(WeightClass weightClass)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.Where(c => c.CityName == name).FirstOrDefault();
-            }
-        }
-
-        public void AddCity(City city)
-        {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                routingContext.Add(city);
+                routingContext.Add(weightClass);
                 routingContext.SaveChanges();
             }
         }

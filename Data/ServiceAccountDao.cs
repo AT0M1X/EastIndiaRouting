@@ -2,61 +2,53 @@
 using EIT.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Expressions;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace EIT.Data
 {
-    public class CityDao
+    public class ServiceAccountDao
     {
         private IServiceScopeFactory _serviceScopeFactory;
-        public CityDao(IServiceScopeFactory serviceScopeFactory) 
+        public ServiceAccountDao(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public List<City> GetAllCities()
+        public List<ServiceAccount> GetAllServiceAccounts()
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.ToList();
+                return routingContext.ServiceAccounts.ToList();
             }
         }
 
-        public List<City> GetAvailableCities()
+        public ServiceAccount GetServiceAccount(int id)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.Where(c => c.Available).ToList();
+                return routingContext.ServiceAccounts.Where(s => s.ServiceAccountID == id).FirstOrDefault();
             }
         }
 
-        public City GetCity(int id)
+        public ServiceAccount GetServiceAccount(string name)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.Where(c => c.CityID == id).FirstOrDefault();
+                return routingContext.ServiceAccounts.Where(s => s.CompanyName == name).FirstOrDefault();
             }
         }
 
-        public City GetCity(string name)
+        public void AddServiceAccount(ServiceAccount ServiceAccount)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.Where(c => c.CityName == name).FirstOrDefault();
-            }
-        }
-
-        public void AddCity(City city)
-        {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                routingContext.Add(city);
+                routingContext.Add(ServiceAccount);
                 routingContext.SaveChanges();
             }
         }
