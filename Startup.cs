@@ -1,6 +1,7 @@
 using System;
 using EIT.Context;
 using EIT.Data;
+using EIT.Mappers;
 using EIT.Model.Configuration;
 using EIT.Service;
 using Microsoft.AspNetCore.Builder;
@@ -41,6 +42,8 @@ namespace EIT
 
             services.AddControllers();
             AddServicesForDependencyInjection(services);
+            AddDaoForDependencyInjection(services);
+            AddMappersForDependencyInjection(services);
 
             services.AddCors(o => o.AddPolicy("MainPolicy", builder =>
             {
@@ -61,7 +64,7 @@ namespace EIT
             else
                 services.AddSpaStaticFiles(configuration => configuration.RootPath = @"wwwroot");
 
-            services.AddDbContext<RoutingContext>(options => options.UseSqlServer(Configuration.GetSection("Databases").GetSection("MainContext").GetValue<string>("ConnectionString")));
+            //services.AddDbContext<RoutingContext>(options => options.UseSqlServer(Configuration.GetSection("Databases").GetSection("MainContext").GetValue<string>("ConnectionString")));
 
         }
 
@@ -96,7 +99,19 @@ namespace EIT
 
         private void AddServicesForDependencyInjection(IServiceCollection services)
         {
-            services.AddSingleton<RouteService>();
+            services.AddSingleton<CityService>();
+
+        }
+
+        private void AddDaoForDependencyInjection(IServiceCollection services)
+        {
+            services.AddSingleton<CityDao>();
+
+        }
+
+        private void AddMappersForDependencyInjection(IServiceCollection services)
+        {
+            services.AddSingleton<ICityMapper, CityMapperImpl>();
 
         }
     }

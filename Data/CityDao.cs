@@ -8,9 +8,9 @@ namespace EIT.Data
     public class CityDao
     {
         private RoutingContext _routingContext;
-        public CityDao(RoutingContext routingContext) 
+        public CityDao() 
         {
-            _routingContext = routingContext;
+
         }
 
         public List<City> GetAllCities()
