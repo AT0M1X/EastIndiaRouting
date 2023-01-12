@@ -28,41 +28,63 @@ namespace EIT.RoutePlanner
 
             // if we have both source city and destination city
             var ourAvailableCities = MockCity.GetAvailableId();
+            Console.WriteLine(ourAvailableCities);
             if(ourAvailableCities.Contains(from) && ourAvailableCities.Contains(to)) 
             {
                 ShortestPathResult result = topology.Dijkstra((uint)from, (uint)to); //result contains the shortest path
-                var path = result.GetPath();
-                foreach (var item in path)
-                {
-                    Console.WriteLine(item);
-                }
+                var path = result.GetPath().ToList(); // a list of integer starting from source, to destination
+                var cost = GetRouteCost(path, weight);
+                var time = GetRouteTravelTime(path);
+                return new RouteResult { 
+                    From= from,
+                    To= to,
+                    Cost= cost,
+                    Time= time,
+                    CostToCompetitors =0
+                };
             }
-                // Compute Route
-                // Calculate cost, time
-                // Return from, to, cost, time, cost to competitors
+           
 
             // if we are the source city, to external:
+            if (ourAvailableCities.Contains(from))
+            {
                 // Get External route
                 // for each city in our own
                 // get cost + time to the destination
-                // make sure it's not a loop
                 // UpdateTopology(edge, cost)
-
                 // Compute Route
                 // Calculate cost, time
                 // Return from, to, cost, time, cost to competitors
-
+            }
+            if(ourAvailableCities.Contains(to)) // give error
+            {
+                
+            }
 
             // if we are the destination city:
-                // break, in this case we don't 
+            // break, in this case we don't 
 
             return new RouteResult { };
         }
 
-        private void ComputeRoute()
+        public IEnumerable<uint> GetRoutetwo(int from, int to, int weight)
         {
-            // ShortestPathResult result = graph.Dijkstra(1, 2); //result contains the shortest path
-            // var path = result.GetPath();
+            // Load topology
+            var topology = LoadTopology(weight);
+
+            // if we have both source city and destination city
+            var ourAvailableCities = MockCity.GetAvailableId();
+            Console.WriteLine(ourAvailableCities);
+            if (ourAvailableCities.Contains(from) && ourAvailableCities.Contains(to))
+            {
+                ShortestPathResult result = topology.Dijkstra((uint)from, (uint)to); //result contains the shortest path
+                var path = result.GetPath().ToList();
+                return path;
+            }
+            else
+            {
+                return new List<uint>();
+            }
         }
 
         private Graph<int, string> LoadTopology(int weight)
@@ -83,7 +105,7 @@ namespace EIT.RoutePlanner
 
             foreach (var edge in mockEdges)
             {
-                graph.Connect((uint)edge.Source, (uint)edge.Destination, edge.Segments * GetPrice(weight), "dummy string"); //First node has key equal 1
+                graph.Connect((uint)edge.Source, (uint)edge.Destination, edge.Segments * GetSeasonalPrice(weight), "dummy string"); //First node has key equal 1
             }
 
             return graph;
@@ -94,7 +116,7 @@ namespace EIT.RoutePlanner
             // graph.Add(edge[Source], edge[Destination], cost)
         }
 
-        private int GetPrice(int weight)
+        private int GetSeasonalPrice(int weight)
         {
             // load [WeightPrices](Id, Minimum, Maximum, Price)
             var mockWeightPrices = MockWeightPrices.GetMockWeightPrices();
@@ -139,6 +161,29 @@ namespace EIT.RoutePlanner
                 }
             }
             // return the price
+        }
+
+        private int GetRouteCost(List<uint> path, int weight)
+        {
+            int routeCost = 0;
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                MockEdge edge = MockEdge.GetMockEdge(Convert.ToInt32(path[i]), Convert.ToInt32(path[i + 1]) );
+                routeCost += edge.Segments * GetSeasonalPrice(weight);
+            }
+            return routeCost;
+        }
+
+        private int GetRouteTravelTime(List<uint> path)
+        {
+            //TODO: implement waiting time
+            int routeTravelTime = 0;
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                MockEdge edge = MockEdge.GetMockEdge(Convert.ToInt32(path[i]), Convert.ToInt32(path[i + 1]));
+                routeTravelTime += edge.Segments * 12; // 12 hours for each completed segment
+            }
+            return routeTravelTime;
         }
     }
 }

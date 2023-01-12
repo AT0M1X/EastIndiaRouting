@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace EIT.MockModel
 {
@@ -19,30 +20,32 @@ namespace EIT.MockModel
             {
                 new MockEdge(1, 1, 7, 5),
                 new MockEdge(2, 7, 1, 5),
-                new MockEdge(3, 2, 16, 3 ),
-                new MockEdge(4, 16, 2, 3),
-                new MockEdge(5, 16, 15, 4),
-                new MockEdge(6, 15, 16, 4),
-                new MockEdge(7, 15, 14, 4),
-                new MockEdge(8, 14, 15, 4),
-                new MockEdge(9, 15, 29, 11),
-                new MockEdge(10, 29, 15, 11),
-                new MockEdge(11, 14, 29, 9),
-                new MockEdge(12, 29, 14, 9),
-                new MockEdge(13, 7, 17, 10),
-                new MockEdge(14, 17, 7, 10),
-                new MockEdge(15, 17, 30, 9),
-                new MockEdge(16, 30, 17, 9),
-                new MockEdge(17, 29, 30, 3),
-                new MockEdge(18, 30, 29, 3  ),
+                new MockEdge(3, 7, 16, 3 ),
+                new MockEdge(4, 16, 7, 3),
+                new MockEdge(5, 7, 17, 10),
+                new MockEdge(6, 17, 7, 10),
+                new MockEdge(7, 16, 17, 11),
+                new MockEdge(8, 17, 16, 11),
+                new MockEdge(9, 16, 15, 4),
+                new MockEdge(10, 15, 16, 4),
+                new MockEdge(11, 17, 30, 9),
+                new MockEdge(12, 30, 17, 9),
+                new MockEdge(11, 17, 29, 10),
+                new MockEdge(12, 29, 17, 10),
+                new MockEdge(13, 30, 29, 3),
+                new MockEdge(14, 29, 30, 3),
+                new MockEdge(15, 14, 29, 9),
+                new MockEdge(16, 29, 14, 9),
+                new MockEdge(17, 15, 14, 4),
+                new MockEdge(18, 14, 15, 4),
                 new MockEdge(19, 30, 26, 8),
                 new MockEdge(20, 26, 30, 8),
                 new MockEdge(21, 26, 24, 3),
                 new MockEdge(22, 24, 26, 3),
-                new MockEdge( 23, 24, 11, 8),
+                new MockEdge(23, 24, 11, 8),
                 new MockEdge(24, 11, 24, 8),
                 new MockEdge(25, 11, 25, 8),
-                new MockEdge( 26, 25, 11, 8),
+                new MockEdge(26, 25, 11, 8),
                 new MockEdge(27, 11, 10, 4),
                 new MockEdge(28, 10, 11, 4),
                 new MockEdge(29, 10, 32, 4),
@@ -55,6 +58,11 @@ namespace EIT.MockModel
                 new MockEdge(36, 1, 31, 3),
             };
             return edges; 
+        }
+
+        public static MockEdge GetMockEdge(int from, int to)
+        {
+            return GetMockEdges().Where(x => x.Source == from && x.Destination == to).FirstOrDefault();
         }
     }
 }
