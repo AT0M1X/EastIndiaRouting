@@ -19,6 +19,7 @@ interface CustomerInfo {
   Phone?: string | undefined
   EMail?: string | undefined
 }
+import PriceAndRouteComponent from "../components/PriceAndRouteComponent";
 
 const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
@@ -116,6 +117,9 @@ const BookingPage = () => {
         <MainView>
           { stage == 1 &&
             <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
+          }
+          { stage == 3 &&
+              <PriceAndRouteComponent from="hej" to="då" price={1233} duration={122} />
           }
           { stage == 4 &&
             <WhoComponent Customer={customerInfo!} handleInputChange={handleCustomerInfoChange} />

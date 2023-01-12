@@ -2,6 +2,7 @@ import { PackageTypeDto, RouteIntegrationRequest } from "../services/swaggerapi/
 import PackageInfoInput from "./WhatComponents/PackageInfoInput"
 import PackageTypeDropdown from "./WhatComponents/PackageTypeDropdown"
 import styled from 'styled-components'
+import React from "react";
 
 const RowContainer = styled.div`
   display: flex;
