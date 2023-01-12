@@ -1,4 +1,5 @@
-﻿using EIT.Model;
+﻿using EIT.DTOs;
+using EIT.Model;
 using EIT.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,8 +18,9 @@ namespace EIT.Controllers
             _findRouteService = findRouteService;
         }
 
-        [HttpGet("/GetRoute", Name = nameof(GetRoute))]
-        public async Task<ActionResult<RouteIntegrationResponse>> GetRoute([FromBody]RouteIntegrationRequest routeIntegrationRequest)
+        [HttpGet("/GetRoute{From:required:int}", Name = nameof(GetRoute))]
+        public async Task<ActionResult<RouteIntegrationResponse>> GetRoute(
+            [FromRoute(Name = "From")] int from)
         {
 
             //    return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
