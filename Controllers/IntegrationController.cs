@@ -17,7 +17,7 @@ namespace EIT.Controllers
             _findRouteService = findRouteService;
         }
 
-        [HttpGet("/GetRoute", Name = nameof(GetRoute))]
+        [HttpPost("/GetRoute", Name = nameof(GetRoute))]
         public async Task<ActionResult<RouteIntegrationResponse>> GetRoute([FromBody]RouteIntegrationRequest routeIntegrationRequest)
         {
 
