@@ -107,12 +107,15 @@ namespace EIT
             services.AddSingleton<RouteService>();
             services.AddSingleton<ServiceAccountService>();
             services.AddSingleton<FindRouteService>();
+            services.AddSingleton<WeightClassService>();
         }
 
         private void AddDaoForDependencyInjection(IServiceCollection services)
         {
             services.AddSingleton<CityDao>();
-
+            services.AddSingleton<PackageTypeDao>();
+            services.AddSingleton<WeightClassDao>();
+            services.AddSingleton<RouteDao>();
         }
 
         private void AddMappersForDependencyInjection(IServiceCollection services)
@@ -122,6 +125,7 @@ namespace EIT
             services.AddSingleton<IRoleMapper, RoleMapperImpl>();
             services.AddSingleton<IRouteMapper, RouteMapperImpl>();
             services.AddSingleton<IServiceAccountMapper, ServiceAccountMapperImpl>();
+            services.AddSingleton<IWeightClassMapper, WeightClassMapperImpl>();
         }
     }
 }

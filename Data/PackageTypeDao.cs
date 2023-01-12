@@ -9,34 +9,47 @@ namespace EIT.Data
 {
     public class PackageTypeDao
     {
-        private RoutingContext _routingContext;
+        private IServiceScopeFactory _serviceScopeFactory;
         public PackageTypeDao(IServiceScopeFactory serviceScopeFactory) 
         {
-            using (var scope = serviceScopeFactory.CreateScope())
-            {
-                _routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-            }
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public List<PackageType> GetAllPackageTypes()
         {
-            return _routingContext.PackageTypes.ToList();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.PackageTypes.ToList();
+            }
         }
 
         public PackageType GetPackageType(int id)
         {
-            return _routingContext.PackageTypes.Where(p => p.PackageTypeID == id).First();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.PackageTypes.Where(p => p.PackageTypeID == id).First();
+            }
         }
 
         public PackageType GetPackageType(string name)
         {
-            return _routingContext.PackageTypes.Where(p => p.PackageTypeName == name).First();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.PackageTypes.Where(p => p.PackageTypeName == name).First();
+            }
         }
 
         public void AddPackageType(PackageType packageType)
         {
-            _routingContext.Add(packageType);
-            _routingContext.SaveChanges();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                routingContext.Add(packageType);
+                routingContext.SaveChanges();
+            }
         }
     }
 }
