@@ -6,8 +6,8 @@ namespace EIT.Mappers
 {
     public interface ICityMapper
     {
-        public CityDto mapCityModelToDto(City city);
+        public CityDto MapCityModelToDto(City city);
 
-        public List<CityDto> mapCityModelsToDtos(List<City> cities);
+        public List<CityDto> MapCityModelsToDtos(List<City> cities);
     }
 }
