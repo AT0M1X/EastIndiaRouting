@@ -1,5 +1,7 @@
 ﻿using EIT.Context;
 using EIT.Model;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -8,9 +10,14 @@ namespace EIT.Data
     public class CityDao
     {
         private RoutingContext _routingContext;
-        public CityDao(RoutingContext routingContext) 
+        public CityDao(IServiceScopeFactory serviceScopeFactory) 
         {
-            _routingContext = routingContext;
+            using (var scope = serviceScopeFactory.CreateScope())
+            {
+                _routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+            }
+
+            AddCity();
         }
 
         public List<City> GetAllCities()
@@ -39,9 +46,11 @@ namespace EIT.Data
             return new City { CityID = 1, Cityname = name, Available = true };
         }
 
-        public void AddCity(City city)
+        public void AddCity()
         {
-            return;
+            var testCity = new City { CityID = 1, Cityname = "City", Available = true };
+            _routingContext.Add(testCity);
+            _routingContext.SaveChanges();
         }
     }
 }
