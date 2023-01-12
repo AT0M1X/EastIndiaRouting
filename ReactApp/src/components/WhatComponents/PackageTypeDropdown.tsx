@@ -1,5 +1,5 @@
 import { ChangeEvent, FunctionComponent } from "react";
-import { PackageTypeDto } from "../../services/swaggerapi/data-contracts";
+import { PackageTypeDto, RouteIntegrationRequest } from "../../services/swaggerapi/data-contracts";
 import styled from 'styled-components'
 
 const BaseInput = styled.select.attrs((props) => ({
@@ -48,12 +48,13 @@ const FormLabel = (props) => {
 }
 
 interface SelectProps {
+    InputData: RouteIntegrationRequest
     PackageTypes: Array<PackageTypeDto>
     onSelectClick: (e: React.ChangeEvent<HTMLSelectElement>) => void
   }
 
 const PackageTypeDropdown = (props: SelectProps) => {
-  const { PackageTypes, onSelectClick } = props
+  const { InputData, PackageTypes, onSelectClick } = props
     const dropdownListe =
     PackageTypes.length > 0 &&
     PackageTypes.map((item) => {
@@ -75,6 +76,7 @@ const PackageTypeDropdown = (props: SelectProps) => {
         onChange={onSelectClick}
         className='item form-select'
         style={{ width: 'auto', maxWidth: '40rem' }}
+        value={InputData?.type ?? ""}
       >
         {dropdownListe}
       </StyledSelect>

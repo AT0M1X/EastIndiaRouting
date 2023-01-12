@@ -16,7 +16,8 @@ import WhatComponent from "../components/WhatComponent";
 const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
   const [routeRequest, setRouteRequest] = useState<RouteIntegrationRequest>();
-  const [title, setTitle] = useState<string>("Title");
+  const [title, setTitle] = useState<string>("Specify The Parameters of Your Parcel");
+  const [stage, setStage] = useState<number>(1);
 
   const setDefaultRequest = () => {
     setRouteRequest({
@@ -47,12 +48,43 @@ const BookingPage = () => {
     setDefaultRequest();
   }, []);
 
+  useEffect(() => {
+    console.info(routeRequest)
+    switch(stage){
+      case 1:
+        setTitle("Specify The Parameters of Your Parcel")
+        return
+      case 2:
+        setTitle("Choose a Starting and Destination Point")
+        return
+      case 3:
+        setTitle("Choose a Preferable Route")
+         return
+      case 4:
+        setTitle("Customer Information")
+        return
+      case 5:
+        setTitle("Order Summary")
+        return
+      default:
+    }
+    
+  }, [stage]);
+
   const handleChange = (event) => {
     setRouteRequest({ ...routeRequest, ["type"]: event.target.value })
   }
 
   const handlePackageInfoChange = (e) => {
     setRouteRequest({ ...routeRequest, [e.target.name]: e.target.value })
+  }
+
+  const handelStage = (value: number) => {
+    const newStage = stage + value;
+    if(newStage > 0 && newStage < 6)
+    {
+      setStage(newStage)
+    }
   }
 
   return (
@@ -62,17 +94,21 @@ const BookingPage = () => {
           <div>{title}</div>
         </Banner>
         <MainView>
-          <WhatComponent PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
+          { stage == 1 &&
+            <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
+          }
         </MainView>
         <ButtonContainer>
           <Button
             onClick={() => {
-              console.log("asd");
+              handelStage(-1);
             }}
           >
             Previous
           </Button>
-          <Button>Next</Button>
+          <Button onClick={() => {
+              handelStage(1);
+            }}>Next</Button>
         </ButtonContainer>
       </BookingView>
     </Page>

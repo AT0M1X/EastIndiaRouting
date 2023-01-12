@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { PackageTypeDto, RouteIntegrationRequest } from '../../services/swaggerapi/data-contracts'
 
 const FLabel = styled.label`
   display: inline-block;
@@ -72,11 +73,12 @@ const FormLabel = (props) => {
   }
 
 interface PackageInfoInputProps {
+    InputData: RouteIntegrationRequest
     handleChange?: (event: React.KeyboardEvent, value: string) => void
   }
 
 const PackageInfoInput = (props: PackageInfoInputProps) => {
-const {handleChange} = props
+const {InputData, handleChange} = props
 
     return (
         <PackageInfoContainer>
@@ -87,6 +89,7 @@ const {handleChange} = props
                     <TextInput
                       onChange={handleChange}
                       name={'weight'}
+                      value={InputData?.weight}
                     />
                   </InputContainer>
                 </Content>
@@ -98,6 +101,7 @@ const {handleChange} = props
                     <TextInput
                       onChange={handleChange}
                       name={'height'}
+                      value={InputData?.height}
                     />
                   </InputContainer>
                 </Content>
@@ -109,6 +113,7 @@ const {handleChange} = props
                     <TextInput
                       onChange={handleChange}
                       name={'width'}
+                      value={InputData?.width}
                     />
                   </InputContainer>
                 </Content>
@@ -119,7 +124,8 @@ const {handleChange} = props
                   <InputContainer>
                     <TextInput
                       onChange={handleChange}
-                      name={'length'}
+                      name={'depth'}
+                      value={InputData?.depth}
                     />
                   </InputContainer>
                 </Content>
