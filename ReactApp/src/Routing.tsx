@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Switch, Route } from "react-router";
+import { Routes, Route } from "react-router-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
@@ -25,20 +25,12 @@ const Routing = () => {
 
   return areRoutesLoaded ? (
     <Router>
-      <Switch>
-        <Route exact path={MenuSetup[Side.Home].path} component={HomePage} />
-        <Route exact path={MenuSetup[Side.Login].path} component={LoginPage} />
-        <Route
-          exact
-          path={MenuSetup[Side.Booking].path}
-          component={BookingPage}
-        />
-        <Route
-          exact
-          path={MenuSetup[Side.Receipt].path}
-          component={ReceiptPage}
-        />
-      </Switch>
+      <Routes>
+        <Route path={MenuSetup[Side.Home].path} element={<HomePage/>} />
+        <Route path={MenuSetup[Side.Login].path} element={<LoginPage/>} />
+        <Route path={MenuSetup[Side.Booking].path} element={<BookingPage/>}/>
+        <Route path={MenuSetup[Side.Receipt].path} element={<ReceiptPage/>}/>
+      </Routes>
     </Router>
   ) : (
     <div>Reading...</div>
