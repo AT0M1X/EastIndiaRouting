@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route } from 'react-router';
 import { BrowserRouter as Router } from 'react-router-dom';
-import Forside from './pages/Forside';
-import ErrorPage from './pages/Error';
-import config, { ReactClientConfiguration } from './services/ClientConfiguration';
+
+import Home from './pages/Home';
+import Login from './pages/Login';
+import BookingView from './pages/BookingView';
+import Receipt from './pages/Receipt';
 
 const Routing = () => {
     const [areRoutesLoaded, setAreRoutesLoaded] = useState<boolean>(false);
-    const [addDevRoutes, setAddDevRoutes] = useState<boolean|undefined>(undefined);
 
     useEffect(() => {
         let isSubscribed = true;
         async function menuSetups() {
-            setAddDevRoutes(await setupDevMenu())
             await setupMenu();
             setAreRoutesLoaded(true);
         }
@@ -28,17 +28,21 @@ const Routing = () => {
         areRoutesLoaded ?
         (<Router>
             <Switch>
-                <Route exact path={MenuSetup[Side.Forside].path} component={Forside} />
-                <Route path='*' component={ErrorPage} />
+                <Route exact path={MenuSetup[Side.Home].path} component={Home} />
+                <Route exact path={MenuSetup[Side.Login].path} component={Login} />
+                <Route exact path={MenuSetup[Side.BookingView].path} component={BookingView} />
+                <Route exact path={MenuSetup[Side.Receipt].path} component={Receipt} />
             </Switch>
         </Router>)
-        : <div>Indlæser...</div>
+        : <div>Reading...</div>
     );
 }
 
 export const Side =  {
-    Forside: 0,
-    Error: 99
+    Home: 0,
+    Login: 1,
+    BookingView: 2,
+    Receipt: 3
 }
 
 type MenuItem = {
@@ -51,21 +55,10 @@ type MenuItem = {
 export const MenuSetup: MenuItem[] = [];
 
 const setupMenu = async () => {
-    MenuSetup[Side.Forside] = {path: "/", menuTekst: "Forside", menuitem: true, prefix: false};
+    MenuSetup[Side.Home] = {path: "/", menuTekst: "Home", menuitem: true, prefix: false};
+    MenuSetup[Side.Login] = {path: "/login", menuTekst: "Login", menuitem: true, prefix: false};
+    MenuSetup[Side.BookingView] = {path: "/bookingview", menuTekst: "BookingView", menuitem: true, prefix: false};
+    MenuSetup[Side.Receipt] = {path: "/receipt", menuTekst: "Receipt", menuitem: true, prefix: false};
 };
-
-const setupDevMenu = async () => {
-    try {
-        const rcc = await config.getData();
-        if (rcc.includeDevRoutes) {
-            MenuSetup[Side.Error] = {path: "/fejl", menuTekst: "(Fejlside)", menuitem: true, prefix: false};
-        }
-        return rcc.includeDevRoutes;
-    } catch (error) {
-        console.log(error);
-        return false;
-    }
-};
-
 
 export default Routing;
