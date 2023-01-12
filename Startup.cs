@@ -66,7 +66,7 @@ namespace EIT
             else
                 services.AddSpaStaticFiles(configuration => configuration.RootPath = @"wwwroot");
 
-            services.AddDbContext<RoutingContext>(options => options.UseSqlServer(Configuration.GetSection("Databases").GetSection("MainContext").GetValue<string>("ConnectionString")));
+            services.AddDbContext<RoutingContext>(options => options.UseSqlServer(Configuration.GetConnectionString("RoutingContext")));
 
         }
 

@@ -14,7 +14,7 @@ namespace EIT.Service
 
         public RoleDto GetRole()
         {
-            return _roleMapper.mapRoleModelToDto();
+            return _roleMapper.MapRoleModelToDto();
         }
     }
 }

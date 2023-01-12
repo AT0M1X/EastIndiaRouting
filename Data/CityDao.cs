@@ -9,39 +9,56 @@ namespace EIT.Data
 {
     public class CityDao
     {
-        private RoutingContext _routingContext;
+        private IServiceScopeFactory _serviceScopeFactory;
         public CityDao(IServiceScopeFactory serviceScopeFactory) 
         {
-            using (var scope = serviceScopeFactory.CreateScope())
-            {
-                _routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-            }
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public List<City> GetAllCities()
         {
-            return _routingContext.Cities.ToList();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.Cities.ToList();
+            }
         }
 
         public List<City> GetAvailableCities()
         {
-            return _routingContext.Cities.Where(c => c.Available).ToList();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.Cities.Where(c => c.Available).ToList();
+            }
         }
 
         public City GetCity(int id)
         {
-            return _routingContext.Cities.Where(c => c.CityID == id).FirstOrDefault();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.Cities.Where(c => c.CityID == id).FirstOrDefault();
+            }
         }
 
         public City GetCity(string name)
         {
-            return _routingContext.Cities.Where(c => c.CityName == name).FirstOrDefault();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.Cities.Where(c => c.CityName == name).FirstOrDefault();
+            }
         }
 
         public void AddCity(City city)
         {
-            _routingContext.Add(city);
-            _routingContext.SaveChanges();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                routingContext.Add(city);
+                routingContext.SaveChanges();
+            }
         }
     }
 }
