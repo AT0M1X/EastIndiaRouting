@@ -13,9 +13,11 @@ namespace EIT.Controllers
     public class IntegrationController : Controller
     {
         private readonly FindRouteService _findRouteService;
-        public IntegrationController(FindRouteService findRouteService) 
+        private readonly ServiceAccountService _serviceAccountService;
+        public IntegrationController(FindRouteService findRouteService, ServiceAccountService serviceAccountService) 
         { 
             _findRouteService = findRouteService;
+            _serviceAccountService = serviceAccountService;
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -31,6 +33,16 @@ namespace EIT.Controllers
             {
                 return NoContent();
             }
+
+            var hasCorrelationID = Request.Headers.TryGetValue("correlationID", out var correlationID);
+            var hasCollaborationID = Request.Headers.TryGetValue("collaborationID", out var collaborationID);
+            var serviceAccount = _serviceAccountService.GetServiceAccount(Guid.Parse(collaborationID));
+
+            if (!hasCorrelationID || !hasCollaborationID || serviceAccount == null)
+            {
+                return Unauthorized();
+            }
+
             try
             {
                 var route = _findRouteService.FindRoutes(new DTOs.FindRouteDto
@@ -38,12 +50,12 @@ namespace EIT.Controllers
                     From = routeIntegrationRequest.From,
                     To = routeIntegrationRequest.To,
                     Height = routeIntegrationRequest.Height,
-                    Lenght = routeIntegrationRequest.Width,
+                    Length = routeIntegrationRequest.Width,
                     Weight = routeIntegrationRequest.Weight,
                     Width = routeIntegrationRequest.Width,
                     PackageType = routeIntegrationRequest.Type,
                     SendTime = DateTime.Parse(routeIntegrationRequest.ArrivalTime),
-
+                    CorrelationID = Guid.Parse(correlationID),
                 });
 
                 return new RouteIntegrationResponse

@@ -6,13 +6,15 @@ namespace EIT.DTOs
     public class FindRouteDto
     {
         [Required]
+        public Guid CorrelationID { get; set; }
+        [Required]
         public string From { get; set; }
         [Required]
         public string To { get; set; }
         [Required]
         public int Weight { get; set; }
         [Required]
-        public int Lenght { get; set; }
+        public int Length { get; set; }
         [Required]
         public int Width { get; set; }
         [Required]
