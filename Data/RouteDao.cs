@@ -33,12 +33,12 @@ namespace EIT.Data
             }
         }
 
-        public Route GetRoute(City origin, City destination)
+        public Route GetRoute(int origin, int destination)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Routes.Where(r => r.OriginCityCityId == origin.CityID && r.DestinationCityCityId == destination.CityID).FirstOrDefault();
+                return routingContext.Routes.Where(r => r.OriginCityCityId == origin && r.DestinationCityCityId == destination).FirstOrDefault();
             }
         }
 

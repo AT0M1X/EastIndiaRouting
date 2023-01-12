@@ -51,12 +51,13 @@ namespace EIT.Controllers
                     From = routeIntegrationRequest.From,
                     To = routeIntegrationRequest.To,
                     Height = routeIntegrationRequest.Height,
-                    Length = routeIntegrationRequest.Width,
+                    Length = routeIntegrationRequest.Depth,
                     Weight = routeIntegrationRequest.Weight,
                     Width = routeIntegrationRequest.Width,
                     PackageType = routeIntegrationRequest.Type,
                     SendTime = DateTime.Parse(routeIntegrationRequest.ArrivalTime),
-                    CorrelationID = Guid.Parse(correlationID),
+                    Currency= routeIntegrationRequest.Currency,
+                    Recommended= routeIntegrationRequest.Recommended
                 });
 
                 if(route != null)
