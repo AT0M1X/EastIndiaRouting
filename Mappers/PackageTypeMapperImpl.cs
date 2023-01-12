@@ -1,20 +1,29 @@
 ﻿using EIT.DTOs;
+using EIT.Model;
 using System.Collections.Generic;
 
 namespace EIT.Mappers
 {
     public class PackageTypeMapperImpl : IPackageTypeMapper
     {
-        public PackageTypeDto MapPackageTypeModelToDto()
+        public PackageTypeDto MapPackageTypeModelToDto(PackageType packageType)
         {
-            return new PackageTypeDto() { Id = 1, Name = "Test"};
+            if (packageType == null)
+            {
+                return null;
+            }
+            return new PackageTypeDto() { Id = packageType.PackageTypeID, Name = packageType.PackageTypeName};
         }
 
-        public List<PackageTypeDto> MapPackageTypeModelsToDtos()
+        public List<PackageTypeDto> MapPackageTypeModelsToDtos(List<PackageType> packageTypes)
         {
-            var packageTypes = new List<PackageTypeDto>();
+            var packageTypeDtos = new List<PackageTypeDto>();
+            foreach (var packageType in packageTypes)
+            { 
+                packageTypeDtos.Add(MapPackageTypeModelToDto(packageType)); 
+            }
 
-            return packageTypes;
+            return packageTypeDtos;
         }
     }
 }
