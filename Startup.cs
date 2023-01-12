@@ -106,7 +106,7 @@ namespace EIT
             services.AddSingleton<RoleService>();
             services.AddSingleton<RouteService>();
             services.AddSingleton<ServiceAccountService>();
-
+            services.AddSingleton<FindRouteService>();
         }
 
         private void AddDaoForDependencyInjection(IServiceCollection services)
