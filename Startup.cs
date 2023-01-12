@@ -1,10 +1,13 @@
 using System;
+using EIT.Context;
+using EIT.Data;
 using EIT.Model.Configuration;
 using EIT.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -57,6 +60,8 @@ namespace EIT
                 services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ReactApp/build"; });
             else
                 services.AddSpaStaticFiles(configuration => configuration.RootPath = @"wwwroot");
+
+            services.AddDbContext<RoutingContext>(options => options.UseSqlServer(Configuration.GetSection("Databases").GetSection("MainContext").GetValue<string>("ConnectionString")));
 
         }
 
