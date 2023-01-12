@@ -109,6 +109,7 @@ namespace EIT
             services.AddSingleton<ServiceAccountService>();
             services.AddSingleton<FindRouteService>();
             services.AddSingleton<WeightClassService>();
+            services.AddSingleton<AuthenticateService>();
         }
 
         private void AddDaoForDependencyInjection(IServiceCollection services)
