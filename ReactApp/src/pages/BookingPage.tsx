@@ -10,8 +10,8 @@ import {
   PackageTypeDto,
   RouteIntegrationRequest,
 } from "../services/swaggerapi/data-contracts";
-import PackageTypeDropdown from "../components/PackageTypeDropdown";
 import styled, { css } from "styled-components";
+import WhatComponent from "../components/WhatComponent";
 
 const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
@@ -48,6 +48,11 @@ const BookingPage = () => {
   }, []);
 
   const handleChange = (event) => {};
+
+  const handlePackageInfoChange = (e) => {
+    setRouteRequest({ ...routeRequest, [e.target.name]: e.target.value });
+    console.info(routeRequest);
+  };
 
   return (
     <Page headerTitle={"Make a Package Delivery"}>
