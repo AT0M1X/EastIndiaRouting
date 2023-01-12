@@ -6,7 +6,7 @@ namespace EIT.Mappers
 {
     public class CityMapperImpl : ICityMapper
     {
-        public CityDto mapCityModelToDto(City city)
+        public CityDto MapCityModelToDto(City city)
         {
             if (city == null)
             {
@@ -15,12 +15,12 @@ namespace EIT.Mappers
             return new CityDto() { Id = city.CityID, Name = city.Cityname};
         }
 
-        public List<CityDto> mapCityModelsToDtos(List<City> cities)
+        public List<CityDto> MapCityModelsToDtos(List<City> cities)
         {
             var citiesDto = new List<CityDto>();
             foreach(City c in cities)
             {
-                citiesDto.Add(mapCityModelToDto(c));
+                citiesDto.Add(MapCityModelToDto(c));
             }
             return citiesDto;
         }

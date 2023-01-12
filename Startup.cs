@@ -100,6 +100,10 @@ namespace EIT
         private void AddServicesForDependencyInjection(IServiceCollection services)
         {
             services.AddSingleton<CityService>();
+            services.AddSingleton<PackageTypeService>();
+            services.AddSingleton<RoleService>();
+            services.AddSingleton<RouteService>();
+            services.AddSingleton<ServiceAccountService>();
 
         }
 
@@ -112,7 +116,10 @@ namespace EIT
         private void AddMappersForDependencyInjection(IServiceCollection services)
         {
             services.AddSingleton<ICityMapper, CityMapperImpl>();
-
+            services.AddSingleton<IPackageTypeMapper, PackageTypeMapperImpl>();
+            services.AddSingleton<IRoleMapper, RoleMapperImpl>();
+            services.AddSingleton<IRouteMapper, RouteMapperImpl>();
+            services.AddSingleton<IServiceAccountMapper, ServiceAccountMapperImpl>();
         }
     }
 }

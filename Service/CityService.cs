@@ -20,7 +20,13 @@ namespace EIT.Service
         public List<CityDto> GetCities()
         {
             var cities = _cityDao.GetAllCities();
-            return _cityMapper.mapCityModelsToDtos(cities);
+            return _cityMapper.MapCityModelsToDtos(cities);
+        }
+
+        public CityDto GetCity(string city)
+        {
+            //var cityModel _cityMapper.MapCityDtoToModel(city);
+            return new CityDto();
         }
     }
 }
