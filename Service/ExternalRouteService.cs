@@ -41,11 +41,6 @@ namespace EIT.Service
                     var json = response.Content.ReadAsStringAsync().Result;
                     var res = Newtonsoft.Json.JsonConvert.DeserializeObject<RouteIntegrationResponse>(json);
 
-
-                    // Get the URI of the created resource.
-                    Uri returnUrl = response.Headers.Location;
-                    Console.WriteLine(returnUrl);
-
                     return res;
                 }
                 return null;

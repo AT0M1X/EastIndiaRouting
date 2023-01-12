@@ -9,14 +9,12 @@ using System.Linq;
 using Dijkstra.NET.Graph.Simple;
 using EIT.Service;
 using EIT.DTOs;
+using Microsoft.Extensions.Hosting;
 
 namespace EIT.RoutePlanner
 {
     public class RoutePlanner : IRoutePlanner
     {
-        // TODO inject database and integration
-        private int topology;
-
         private readonly CityService _cityService;
         private readonly RouteService _routeService;
         private readonly IExternalRouteService _externalRouteService;
@@ -31,7 +29,10 @@ namespace EIT.RoutePlanner
         public RouteResult GetRoute(int from, int to, FindRouteDto findRouteDto)
         {
             // Load topology
-            var topology = LoadTopology(findRouteDto.Weight);
+            var cities = _cityService.GetCities();
+            var edges = _routeService.GetInternalRoutes();
+
+            var topology = LoadTopology(cities, edges, findRouteDto.Weight);
 
             // if we have both source city and destination city
             var ourAvailableCities = GetAvailableId();
@@ -40,28 +41,86 @@ namespace EIT.RoutePlanner
             {
                 ShortestPathResult result = topology.Dijkstra((uint)from, (uint)to); //result contains the shortest path
                 var path = result.GetPath().ToList(); // a list of integer starting from source, to destination
-                var cost = GetRouteCost(path, findRouteDto.Weight);
-                var time = GetRouteTravelTime(path);
-                return new RouteResult { 
-                    From= from,
-                    To= to,
-                    Cost= cost,
-                    Time= time,
-                    CostToCompetitors =0
-                };
+                if(path != null)
+                {
+                    var cost = GetRouteCost(path, edges, findRouteDto.Weight);
+                    var time = GetRouteTravelTime(path);
+                    return new RouteResult
+                    {
+                        From = from,
+                        To = to,
+                        Cost = cost,
+                        Time = time,
+                        CostToCompetitors = 0
+                    };
+                }
+                return null;
             }
            
 
             // if we are the source city, to external:
             if (ourAvailableCities.Contains(from))
             {
-                // Get External route
-                // for each city in our own
-                // get cost + time to the destination
-                // UpdateTopology(edge, cost)
-                // Compute Route
-                // Calculate cost, time
-                // Return from, to, cost, time, cost to competitors
+                bool newNodeAdded = false;
+                foreach (var cityId in ourAvailableCities)
+                {
+                    var city = _cityService.GetCity(cityId);
+                    var routeDto = new FindRouteDto
+                    {
+                        From = city.Name,
+                        To = findRouteDto.To,
+                        Height = findRouteDto.Height,
+                        Length = findRouteDto.Length,
+                        Weight = findRouteDto.Weight,
+                        Width = findRouteDto.Width,
+                        PackageType = findRouteDto.PackageType,
+                        SendTime = findRouteDto.SendTime,
+                        Currency= findRouteDto.Currency,
+                        Recommended= findRouteDto.Recommended
+                    };
+                    var externalRouteResponse = _externalRouteService.GetExternalRoute(routeDto);
+
+                    if(externalRouteResponse == null)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        if(!newNodeAdded)
+                        {
+                            topology.AddNode(to);
+                            newNodeAdded = true;
+                        }
+                        topology.Connect((uint)cityId, (uint)to, externalRouteResponse.Cost, "dummy string");
+                        topology.Connect((uint)to, (uint)cityId, externalRouteResponse.Cost, "dummy string");
+                        edges.Add(new RouteDto
+                        {
+                            FromId = cityId,
+                            ToId = to,
+                            Time = externalRouteResponse.Time
+                        });
+                        edges.Add(new RouteDto
+                        {
+                            FromId = to,
+                            ToId = cityId,
+                            Time = externalRouteResponse.Time
+                        });
+                    }
+                }
+
+                ShortestPathResult result = topology.Dijkstra((uint)from, (uint)to); //result contains the shortest path
+                var path = result.GetPath().ToList(); // a list of integer starting from source, to destination
+                var cost = GetRouteCost(path, edges, findRouteDto.Weight);
+                var time = GetRouteTravelTime(path);
+                return new RouteResult
+                {
+                    From = from,
+                    To = to,
+                    Cost = cost,
+                    Time = time,
+                    CostToCompetitors = 0
+                };
+
             }
             if(ourAvailableCities.Contains(to)) // give error
             {
@@ -74,37 +133,8 @@ namespace EIT.RoutePlanner
             return null;
         }
 
-        public IEnumerable<uint> GetRoutetwo(int from, int to, int weight)
+        private Graph<int, string> LoadTopology(List<CityDto> cities, List<RouteDto> edges, int weight)
         {
-            // Load topology
-            var topology = LoadTopology(weight);
-
-            // if we have both source city and destination city
-            var ourAvailableCities = MockCity.GetAvailableId();
-            Console.WriteLine(ourAvailableCities);
-            if (ourAvailableCities.Contains(from) && ourAvailableCities.Contains(to))
-            {
-                ShortestPathResult result = topology.Dijkstra((uint)from, (uint)to); //result contains the shortest path
-                var path = result.GetPath().ToList();
-                return path;
-            }
-            else
-            {
-                return new List<uint>();
-            }
-        }
-
-        private Graph<int, string> LoadTopology(int weight)
-        {
-            // var cities = db.getCities(); //(Id, Name, Available)
-            //List<MockCity> mockCities = MockCity.GetMockCities();
-            var cities = _cityService.GetCities();
-            // cities = cities.Where(x => x.Available);
-
-            // var edges = db.getEdges(); //(Id, Source, Destination, Segments)
-            //List<MockEdge> mockEdges = MockEdge.GetMockEdges();
-            var edges = _routeService.GetInternalRoutes();
-
             var graph = new Graph<int, string>();
 
             foreach (var city in cities)
@@ -118,11 +148,6 @@ namespace EIT.RoutePlanner
             }
 
             return graph;
-        }
-
-        private void UpdateTopology()
-        {
-            // graph.Add(edge[Source], edge[Destination], cost)
         }
 
         private int GetSeasonalPrice(int weight)
@@ -172,12 +197,12 @@ namespace EIT.RoutePlanner
             // return the price
         }
 
-        private int GetRouteCost(List<uint> path, int weight)
+        private int GetRouteCost(List<uint> path, List<RouteDto> edges, int weight)
         {
             int routeCost = 0;
             for (int i = 0; i < path.Count - 1; i++)
             {
-                MockEdge edge = MockEdge.GetMockEdge(Convert.ToInt32(path[i]), Convert.ToInt32(path[i + 1]) );
+                var edge = GetEdge(edges, Convert.ToInt32(path[i]), Convert.ToInt32(path[i + 1]));
                 routeCost += edge.Segments * GetSeasonalPrice(weight);
             }
             return routeCost;
@@ -205,6 +230,11 @@ namespace EIT.RoutePlanner
                 setCities.Add(edge.ToId);
             }
             return setCities.ToList();
+        }
+
+        private RouteDto GetEdge(List<RouteDto> edges, int from, int to)
+        {
+            return edges.Where(x => x.FromId == from && x.ToId == to).FirstOrDefault();
         }
     }
 }
