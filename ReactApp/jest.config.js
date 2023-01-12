@@ -8,7 +8,7 @@ module.exports = {
     },
 
     transformIgnorePatterns: [
-        "node_modules/(?!(@ftop|react-router-dom|react-datepicker|DatePicker)/)",
+        "node_modules/(?!(react-router-dom|react-datepicker|DatePicker)/)",
     ],
 
     moduleNameMapper: {'\\.(css|scss)$': '<rootDir>/__tests__/__mocks__/styleMock.js'},
