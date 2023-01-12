@@ -22,7 +22,6 @@ const HeaderComponent = ({ title = "East India Company" }: props) => {
     </div>
   );
 };
-
 const Header = styled.header`
   display: flex;
   justify-content: center;
