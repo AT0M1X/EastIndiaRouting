@@ -1,13 +1,9 @@
 using System;
-using FTOP.Serilog.Configuration;
-using FTOP.Serilog.Sink.BatchFormatter;
-using FTOP.Serilog.Sink.Client;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Formatting.Elasticsearch;
 
 namespace EIT
 {
@@ -18,7 +14,6 @@ namespace EIT
             var host = CreateHostBuilder(args).Build();
 
             var hostingEnvironment = host.Services.GetService<IWebHostEnvironment>();
-            var serilogConfiguration = host.Services.GetService<SerilogNagiosConfiguration>();
             var config = host.Services.GetRequiredService<IConfiguration>();
             var loggerConfiguration = new LoggerConfiguration()
                 .ReadFrom.Configuration(config)
@@ -26,22 +21,6 @@ namespace EIT
                 .Enrich.WithProperty("Application", hostingEnvironment?.ApplicationName ?? "EIT")
                 .Enrich.WithProperty("DeploymentTarget", config["DEPLOYMENTTARGET"])
                 .Enrich.FromLogContext();
-
-            if (!string.IsNullOrEmpty(serilogConfiguration?.File))
-            {
-                loggerConfiguration.WriteTo.File(new ElasticsearchJsonFormatter(), serilogConfiguration.File, rollingInterval: RollingInterval.Hour);
-            }
-
-            if (!string.IsNullOrEmpty(serilogConfiguration?.NagiosUri))
-            {
-                loggerConfiguration.WriteTo.DurableHttpUsingFileSizeRolledBuffers(
-                    requestUri: serilogConfiguration.NagiosUri,
-                    httpClient: new TcpHttpClient(),
-                    bufferBaseFileName: serilogConfiguration.BufferFilename,
-                    batchFormatter: new NagiosLogstashBatcher(),
-                    period: serilogConfiguration.BatchInterval,
-                    textFormatter: new ElasticsearchJsonFormatter());
-            }
 
             if (hostingEnvironment.IsDevelopment())
             {
@@ -89,9 +68,8 @@ namespace EIT
                 {
                     webBuilder
                         .UseStartup<Startup>()
-                        .UseSerilog()
                         .UseKestrel();
-                });
+                }).UseSerilog();
         }
     }
 }

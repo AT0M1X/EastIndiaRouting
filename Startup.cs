@@ -1,6 +1,4 @@
 using System;
-using FTOP.Dappersetup;
-using FTOP.Serilog.Configuration;
 using EIT.Model.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,7 +25,6 @@ namespace EIT
         {
             var appconfig = Configuration.GetSection("ApplicationConfiguration").Get<ApplicationConfiguration>();
             services.AddSingleton(appconfig);
-            services.AddSingleton(Configuration.GetSection("SerilogNagiosConfiguration").Get<SerilogNagiosConfiguration>());
             services.AddSingleton(Configuration.GetSection("ReactClientConfiguration").Get<ReactClientConfiguration>());
 
             services.Configure<ForwardedHeadersOptions>(options =>
@@ -39,8 +36,6 @@ namespace EIT
             });
 
             services.AddControllers();
-
-            FTOP.Dappersetup.Configure.InitializePostgres(services, Configuration);
 
             services.AddCors(o => o.AddPolicy("MainPolicy", builder =>
             {
@@ -63,7 +58,7 @@ namespace EIT
 
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IConnectionProvider cp, ILogger<Startup> logger, ApplicationConfiguration config)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, ApplicationConfiguration config)
         {
             if (env.IsDevelopment())
             {
@@ -90,26 +85,6 @@ namespace EIT
                 }
             });
 
-            //Evolve
-            try
-            {
-                var connection = cp.GetConnection();
-                var evolve = new Evolve.Evolve(connection, msg => logger.LogInformation(msg))
-                {
-                    Locations = new[] {"dbmigrations"},
-                    IsEraseDisabled = true
-                };
-
-                evolve.Migrate();
-            }
-            catch (Exception e)
-            {
-                logger.LogCritical("Database migration failed", e);
-                if (!env.IsDevelopment())
-                {
-                    throw;
-                }
-            }
         }
     }
 }

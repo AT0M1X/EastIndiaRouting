@@ -8,13 +8,12 @@
     <AssemblyName>EIT</AssemblyName>
     <RootNamespace>EIT</RootNamespace>
     <SpaRoot>ReactApp</SpaRoot>
+    <SpaClientUrl>http://localhost:6004</SpaClientUrl>
+    <SpaLaunchCommand>npm start -- --port 6004</SpaLaunchCommand>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Evolve" Version="3.0.0" />
-    <PackageReference Include="FTOP.Common" Version="6.0.1" />
-    <PackageReference Include="FTOP.Dappersetup" Version="6.0.1" />
-    <PackageReference Include="FTOP.Serilog" Version="6.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.30" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.10" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
@@ -25,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
     <Folder Include="logs\" />
   </ItemGroup>
 
