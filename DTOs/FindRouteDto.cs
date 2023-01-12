@@ -6,9 +6,9 @@ namespace EIT.DTOs
     public class FindRouteDto
     {
         [Required]
-        public string From { get; set; }
+        public int From { get; set; }
         [Required]
-        public string To { get; set; }
+        public int To { get; set; }
         [Required]
         public int Weight { get; set; }
         [Required]
