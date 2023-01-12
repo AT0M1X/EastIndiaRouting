@@ -12,6 +12,7 @@ import {
 } from "../services/swaggerapi/data-contracts";
 import styled, { css } from "styled-components";
 import WhatComponent from "../components/WhatComponent";
+import PriceAndRouteComponent from "../components/PriceAndRouteComponent";
 
 const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
@@ -96,6 +97,9 @@ const BookingPage = () => {
         <MainView>
           { stage == 1 &&
             <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
+          }
+          { stage == 3 &&
+              <PriceAndRouteComponent from="hej" to="då" price={1233} duration={122} />
           }
         </MainView>
         <ButtonContainer>
