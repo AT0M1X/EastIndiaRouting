@@ -1,4 +1,5 @@
 ﻿using EIT.Model;
+using EIT.Service;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,6 +11,11 @@ namespace EIT.Controllers
     [Route("[api]")]
     public class IntegrationController : Controller
     {
+        private readonly FindRouteService _findRouteService;
+        public IntegrationController(FindRouteService findRouteService) 
+        { 
+            _findRouteService = findRouteService;
+        }
 
         [HttpGet("/GetRoute", Name = nameof(GetRoute))]
         public async Task<ActionResult<RouteIntegrationResponse>> GetRoute([FromBody]RouteIntegrationRequest routeIntegrationRequest)
