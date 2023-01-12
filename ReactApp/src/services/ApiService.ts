@@ -13,7 +13,7 @@ import {
 
     getAllCities = (params: RequestParams = {}) =>
     this.request<CityDto[], ProblemDetails>({
-      path: `/api/cities`,
+      path: `/cities`,
       method: 'GET',
       format: 'json',
       ...params,
@@ -21,7 +21,7 @@ import {
 
     getAllPackageTypes = (params: RequestParams = {}) =>
     this.request<PackageTypeDto[], ProblemDetails>({
-      path: `/api/packagetypes`,
+      path: `/packagetypes`,
       method: 'GET',
       format: 'json',
       ...params,
@@ -29,7 +29,7 @@ import {
 
     getAllRoutes = (params: RequestParams = {}) =>
     this.request<RouteDto[], ProblemDetails>({
-      path: `/api/internalroutes`,
+      path: `/internalroutes`,
       method: 'GET',
       format: 'json',
       ...params,
@@ -37,7 +37,7 @@ import {
 
     getAllWeightClasses = (params: RequestParams = {}) =>
     this.request<WeightClassDto[], ProblemDetails>({
-      path: `/api/weightclasses`,
+      path: `/weightclasses`,
       method: 'GET',
       format: 'json',
       ...params,
@@ -45,7 +45,7 @@ import {
 
     getRoute = (data: RouteIntegrationRequest, params: RequestParams = {}) =>
     this.request<WeightClassDto[], ProblemDetails>({
-      path: `/api/weightclasses`,
+      path: `/GetRoute`,
       method: 'POST',
       body: data,
       format: 'json',
