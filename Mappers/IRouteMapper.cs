@@ -6,8 +6,8 @@ namespace EIT.Mappers
 {
     public interface IRouteMapper
     {
-        public RouteDto MapRouteModelToDto(Route route);
+        public RouteDto MapRouteModelToDto(Route route, List<City> cities);
 
-        public List<RouteDto> MapRouteModelsToDtos(List<Route> routes);
+        public List<RouteDto> MapRouteModelsToDtos(List<Route> routes, List<City> cities);
     }
 }
