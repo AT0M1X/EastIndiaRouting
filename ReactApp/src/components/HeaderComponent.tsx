@@ -3,7 +3,7 @@ import { ReactComponent as LogoSvg } from "../assets/img/logo.svg";
 import { useLocation, Link } from "react-router-dom";
 import { MenuSetup, Side } from "../Routing";
 import styled, { css } from "styled-components";
-import logo from "/Code/Github/EastIndiaRouting/ReactApp/src/assets/img/logo.png";
+import logo from "../assets/img/logo.png";
 
 type props = {
   title: string;
@@ -22,7 +22,6 @@ const HeaderComponent = ({ title = "East India Company" }: props) => {
     </div>
   );
 };
-
 const Header = styled.header`
   display: flex;
   justify-content: center;
