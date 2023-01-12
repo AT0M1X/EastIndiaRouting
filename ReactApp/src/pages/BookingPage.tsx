@@ -2,7 +2,9 @@ import React, { FunctionComponent, ReactNode, useEffect, useState } from "react"
 import Page from "../components/Page";
 import FrontServiceApi from "../services/FrontServiceApi";
 import { PackageTypeDto, RouteIntegrationRequest } from "../services/swaggerapi/data-contracts";
-import PackageTypeDropdown from "../components/PackageTypeDropdown";
+import PackageTypeDropdown from "../components/WhatComponents/PackageTypeDropdown";
+import PackageInfoInput from "../components/WhatComponents/PackageInfoInput";
+import WhatComponent from "../components/WhatComponent";
 
 const BookingPage: FunctionComponent = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([])
@@ -41,9 +43,14 @@ const BookingPage: FunctionComponent = () => {
 
   }
 
+  const handlePackageInfoChange = (e) => {
+    setRouteRequest({ ...routeRequest, [e.target.name]: e.target.value })
+    console.info(routeRequest)
+  }
+
   return (
     <Page headerTitle={"Make a Package Delivery"}>
-      <PackageTypeDropdown PackageTypes={packageTypes} onSelectClick={handleChange}/>
+      <WhatComponent PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
     </Page>)
 };
 
