@@ -53,7 +53,8 @@ namespace EIT
                 builder
                     .AllowAnyHeader()
                     .AllowAnyMethod()
-                    .AllowCredentials()
+                    //.AllowCredentials()
+                    .AllowAnyOrigin()
                     //.WithOrigins(<Array of corsenabled urls>) // Indsættes fra config.
                     ;
             }));
