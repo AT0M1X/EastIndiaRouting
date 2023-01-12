@@ -16,40 +16,31 @@ namespace EIT.Data
             {
                 _routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
             }
-
-            AddCity();
         }
 
         public List<City> GetAllCities()
         {
-            var cities = new List<City>();
-            cities.Add(new City { CityID = 1, Cityname = "Cityname", Available = false });
-            return cities;
-            //return _routingContext.Cities.ToList();
+            return _routingContext.Cities.ToList();
         }
 
         public List<City> GetAvailableCities()
         {
-            var cities = new List<City>();
-            cities.Add(new City { CityID = 1, Cityname = "Cityname", Available = true });
-            return cities;
-            //return _routingContext.Cities.Where(c => c.Available).ToList();
+            return _routingContext.Cities.Where(c => c.Available).ToList();
         }
 
         public City GetCity(int id)
         {
-            return new City { CityID = id, Cityname = "City Name", Available = true};
+            return _routingContext.Cities.Where(c => c.CityID == id).FirstOrDefault();
         }
 
         public City GetCity(string name)
         {
-            return new City { CityID = 1, Cityname = name, Available = true };
+            return _routingContext.Cities.Where(c => c.CityName == name).FirstOrDefault();
         }
 
-        public void AddCity()
+        public void AddCity(City city)
         {
-            var testCity = new City { CityID = 1, Cityname = "City", Available = true };
-            _routingContext.Add(testCity);
+            _routingContext.Add(city);
             _routingContext.SaveChanges();
         }
     }
