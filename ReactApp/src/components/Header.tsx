@@ -10,7 +10,7 @@ const Header: FunctionComponent = () => {
       <header className="header">
         <div className="portal-header">
           <div className="container portal-header-inner">
-            <LogoSvg className="mr-3" /><span><Link className="header-title" to={MenuSetup[Side.Forside].path}>Nyt system</Link></span>
+            <LogoSvg className="mr-3" /><span><Link className="header-title" to={MenuSetup[Side.Home].path}>Nyt system</Link></span>
             <button className="button button-tertiary button-menu-open js-menu-open ml-auto s-print-none" aria-haspopup="menu" title="Åben mobil menu">Menu</button>
           </div>
         </div>

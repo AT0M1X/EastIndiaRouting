@@ -1,4 +1,6 @@
 using System;
+using EIT.Context;
+using EIT.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +44,7 @@ namespace EIT
             {
                 Log.CloseAndFlush();
             }
+            //var dao = new CityDao(new RoutingContext());
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args)
