@@ -1,16 +1,20 @@
-import { FunctionComponent, PropsWithChildren } from 'react';
-import Footer from './Footer';
-import Header from './Header';
+import { FunctionComponent, PropsWithChildren } from "react";
+import Footer from "./Footer";
+import HeaderComponent from "./HeaderComponent";
 
-const Page = (props: PropsWithChildren<any>) => {
-    
-    return (
-        <div>
-            <Header />
-            {props.children}
-            <Footer />
-        </div>
-    )
-}
+type Pageprops = {
+  headerTitle: string;
+};
 
-  export default Page;
+const Page = (props: PropsWithChildren<Pageprops>) => {
+  const children = props.children;
+  return (
+    <div>
+      <HeaderComponent title={props.headerTitle} />
+      {children}
+      <Footer />
+    </div>
+  );
+};
+
+export default Page;
