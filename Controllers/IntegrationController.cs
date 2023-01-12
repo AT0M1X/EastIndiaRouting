@@ -36,12 +36,13 @@ namespace EIT.Controllers
 
             var hasCorrelationID = Request.Headers.TryGetValue("correlationID", out var correlationID);
             var hasCollaborationID = Request.Headers.TryGetValue("collaborationID", out var collaborationID);
+
+            if (!hasCorrelationID) return BadRequest();
+            if (!hasCollaborationID) return Unauthorized();
+
             var serviceAccount = _serviceAccountService.GetServiceAccount(Guid.Parse(collaborationID));
 
-            if (!hasCorrelationID || !hasCollaborationID || serviceAccount == null)
-            {
-                return Unauthorized();
-            }
+            if (serviceAccount == null) return Unauthorized();
 
             try
             {

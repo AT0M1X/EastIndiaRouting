@@ -116,6 +116,7 @@ namespace EIT
             services.AddSingleton<PackageTypeDao>();
             services.AddSingleton<WeightClassDao>();
             services.AddSingleton<RouteDao>();
+            services.AddSingleton<ServiceAccountDao>();
         }
 
         private void AddMappersForDependencyInjection(IServiceCollection services)
