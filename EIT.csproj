@@ -8,6 +8,8 @@
     <AssemblyName>EIT</AssemblyName>
     <RootNamespace>EIT</RootNamespace>
     <SpaRoot>ReactApp</SpaRoot>
+    <SpaClientUrl>http://localhost:6004</SpaClientUrl>
+    <SpaLaunchCommand>npm start -- --port 6004</SpaLaunchCommand>
   </PropertyGroup>
 
   <ItemGroup>
