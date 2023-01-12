@@ -1,4 +1,5 @@
 ﻿using EIT.DTOs;
+using EIT.Model;
 using EIT.Model.Configuration;
 using EIT.Service;
 using Microsoft.AspNetCore.Http;
@@ -17,13 +18,16 @@ namespace EIT.Controllers
         private readonly PackageTypeService _packageTypeService;
         private readonly WeightClassService _weightClassService;
         private readonly RouteService _routeService;
+        private readonly AuthenticateService _authenticateService;
+
 
         public FrontEndController(
             ILogger<FrontEndController> logger, 
             CityService cityService, 
             PackageTypeService packageTypeService,
             WeightClassService weightClassService,
-            RouteService routeService
+            RouteService routeService,
+            AuthenticateService authenticateService
             )
         {
             _logger = logger;
@@ -31,6 +35,7 @@ namespace EIT.Controllers
             _packageTypeService = packageTypeService;
             _weightClassService = weightClassService;
             _routeService = routeService;
+            _authenticateService = authenticateService;
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -59,6 +64,13 @@ namespace EIT.Controllers
         public IEnumerable<RouteDto> GetInternalRoutes()
         {
             return _routeService.GetInternalRoutes();
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [HttpGet("/authenticate", Name = nameof(Authenticate))]
+        public bool Authenticate([FromQuery] AuthenticateRequest authenticateRequest)
+        {
+            return _authenticateService.Authenticate(authenticateRequest.Username, authenticateRequest.Password);
         }
     }
 }

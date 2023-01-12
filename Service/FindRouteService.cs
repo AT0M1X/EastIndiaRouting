@@ -9,11 +9,13 @@ namespace EIT.Service
     {
         private readonly CityService _cityService;
         private readonly PackageTypeService _packageTypeService;
+        private readonly ServiceAccountService _serviceAccountService;
         private readonly IRoutePlanner _routePlanner;
-        public FindRouteService(CityService cityService, PackageTypeService packageTypeService, IRoutePlanner routePlanner)
+        public FindRouteService(CityService cityService, PackageTypeService packageTypeService, ServiceAccountService serviceAccountService, IRoutePlanner routePlanner)
         {
             _cityService = cityService;
             _packageTypeService = packageTypeService;
+            _serviceAccountService = serviceAccountService;
             _routePlanner = routePlanner;
         }
 
@@ -32,12 +34,12 @@ namespace EIT.Service
             }
 
             var packageType = _packageTypeService.GetPackageType(findRouteDto.PackageType);
-            if (packageType == null)
+            if (packageType == null || !packageType.Supported)
             {
                 throw new ArgumentException();
             }
 
-            return _routePlanner.GetRoute(origin.Id, destination.Id, findRouteDto.Weight);
+            return _routePlanner.GetRoute(origin.Id, destination.Id, findRouteDto);
         }
     }
 }

@@ -12,7 +12,7 @@ namespace EIT.Mappers
             {
                 return null;
             }
-            return new PackageTypeDto() { Id = packageType.PackageTypeID, Name = packageType.PackageTypeName};
+            return new PackageTypeDto() { Id = packageType.PackageTypeID, Name = packageType.PackageTypeName, Supported = packageType.Supported};
         }
 
         public List<PackageTypeDto> MapPackageTypeModelsToDtos(List<PackageType> packageTypes)
