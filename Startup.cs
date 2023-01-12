@@ -1,6 +1,7 @@
 using System;
 using EIT.Context;
 using EIT.Data;
+using EIT.Interfaces;
 using EIT.Mappers;
 using EIT.Model.Configuration;
 using EIT.Service;
@@ -41,6 +42,7 @@ namespace EIT
             });
 
             services.AddControllers();
+            services.AddTransient<IRoutePlanner, RoutePlanner.RoutePlanner>();
             AddServicesForDependencyInjection(services);
             AddDaoForDependencyInjection(services);
             AddMappersForDependencyInjection(services);
@@ -64,7 +66,7 @@ namespace EIT
             else
                 services.AddSpaStaticFiles(configuration => configuration.RootPath = @"wwwroot");
 
-            services.AddDbContext<RoutingContext>(options => options.UseSqlServer(Configuration.GetSection("Databases").GetSection("MainContext").GetValue<string>("ConnectionString")));
+            services.AddDbContext<RoutingContext>(options => options.UseSqlServer(Configuration.GetConnectionString("RoutingContext")));
 
         }
 
@@ -104,13 +106,16 @@ namespace EIT
             services.AddSingleton<RoleService>();
             services.AddSingleton<RouteService>();
             services.AddSingleton<ServiceAccountService>();
-
+            services.AddSingleton<FindRouteService>();
+            services.AddSingleton<WeightClassService>();
         }
 
         private void AddDaoForDependencyInjection(IServiceCollection services)
         {
             services.AddSingleton<CityDao>();
-
+            services.AddSingleton<PackageTypeDao>();
+            services.AddSingleton<WeightClassDao>();
+            services.AddSingleton<RouteDao>();
         }
 
         private void AddMappersForDependencyInjection(IServiceCollection services)
@@ -120,6 +125,7 @@ namespace EIT
             services.AddSingleton<IRoleMapper, RoleMapperImpl>();
             services.AddSingleton<IRouteMapper, RouteMapperImpl>();
             services.AddSingleton<IServiceAccountMapper, ServiceAccountMapperImpl>();
+            services.AddSingleton<IWeightClassMapper, WeightClassMapperImpl>();
         }
     }
 }

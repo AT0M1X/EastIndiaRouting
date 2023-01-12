@@ -1,61 +1,53 @@
 ﻿using EIT.Context;
 using EIT.Model;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace EIT.Data
 {
-    public class CityDao
+    public class PackageTypeDao
     {
         private IServiceScopeFactory _serviceScopeFactory;
-        public CityDao(IServiceScopeFactory serviceScopeFactory) 
+        public PackageTypeDao(IServiceScopeFactory serviceScopeFactory) 
         {
             _serviceScopeFactory = serviceScopeFactory;
         }
 
-        public List<City> GetAllCities()
+        public List<PackageType> GetAllPackageTypes()
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.ToList();
+                return routingContext.PackageTypes.ToList();
             }
         }
 
-        public List<City> GetAvailableCities()
+        public PackageType GetPackageType(int id)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.Where(c => c.Available).ToList();
+                return routingContext.PackageTypes.Where(p => p.PackageTypeID == id).FirstOrDefault();
             }
         }
 
-        public City GetCity(int id)
+        public PackageType GetPackageType(string name)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.Where(c => c.CityID == id).FirstOrDefault();
+                return routingContext.PackageTypes.Where(p => p.PackageTypeName == name).FirstOrDefault();
             }
         }
 
-        public City GetCity(string name)
+        public void AddPackageType(PackageType packageType)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Cities.Where(c => c.CityName == name).FirstOrDefault();
-            }
-        }
-
-        public void AddCity(City city)
-        {
-            using (var scope = _serviceScopeFactory.CreateScope())
-            {
-                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                routingContext.Add(city);
+                routingContext.Add(packageType);
                 routingContext.SaveChanges();
             }
         }

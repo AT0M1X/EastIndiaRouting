@@ -1,64 +1,54 @@
-import axios from 'axios';
-import { LogError } from './ErrorService';
+import {
+    CityDto,
+    PackageTypeDto,
+    RouteDto,
+    ProblemDetails,
+    RouteIntegrationRequest,
+    RouteIntegrationResponse,
+    WeightClassDto,
+  } from './swaggerapi/data-contracts'
+  import { ContentType, HttpClient, RequestParams } from './swaggerapi/http-client'
 
-const ApiService = <T>(url: string, method: string = 'get', data: object | undefined = undefined, headers: object | undefined = undefined, skipLogging: boolean = false): Promise<T> => {
-    const callApi = async (): Promise<any> => {
+  export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
 
-            return _callApi(method, data, headers, skipLogging).catch(error => {
-                throw error;
-            });
-    }
+    getAllCities = (params: RequestParams = {}) =>
+    this.request<CityDto[], ProblemDetails>({
+      path: `/api/cities`,
+      method: 'GET',
+      format: 'json',
+      ...params,
+    })
 
-    const _callApi = async (method: string, data: object | undefined, customHeaders: object | undefined = undefined, skipLogging: boolean) => {
-        const headers = customHeaders ?? {
-   //         Authorization: 'Bearer ' + token
-        };
-        const finalUrl = (url.startsWith('http:') || url.startsWith('https:')) ? url : `/${url}`;
-        try {
-            const response = method.toLowerCase() === 'post' 
-                ? await axios.post<T>(finalUrl, 
-                    data,
-                    {
-                        headers: headers,
-                        withCredentials: true
-                    })
-                : method.toLowerCase() === 'put'
-                    ? await axios.put<T>(finalUrl, 
-                        data,
-                        {
-                            headers: headers,
-                            withCredentials: true
-                        })
-                    : method.toLowerCase() === 'patch'
-                        ? await axios.patch<T>(finalUrl, 
-                            data,
-                            {
-                                headers: headers,
-                                withCredentials: true
-                            })
-                        : method.toLowerCase() === 'delete'
-                            ? await axios.delete<T>(finalUrl, 
-                                {
-                                    headers: headers,
-                                    withCredentials: true
-                                })
-                            : await axios.request<T>({
-                                url:  finalUrl,
-                                headers: headers,
-                                withCredentials: true
-                            });
+    getAllPackageTypes = (params: RequestParams = {}) =>
+    this.request<PackageTypeDto[], ProblemDetails>({
+      path: `/api/packagetypes`,
+      method: 'GET',
+      format: 'json',
+      ...params,
+    })
 
-            return response.data;
-        } catch (error: any) {
-            if (!skipLogging) {
-                LogError(error.stack ? error.stack : error.message);
-            }
-            throw error;
-        }
-    }
+    getAllRoutes = (params: RequestParams = {}) =>
+    this.request<RouteDto[], ProblemDetails>({
+      path: `/api/internalroutes`,
+      method: 'GET',
+      format: 'json',
+      ...params,
+    })
 
-    return callApi();
-}
+    getAllWeightClasses = (params: RequestParams = {}) =>
+    this.request<WeightClassDto[], ProblemDetails>({
+      path: `/api/weightclasses`,
+      method: 'GET',
+      format: 'json',
+      ...params,
+    })
 
-
-export default ApiService;
+    getRoute = (data: RouteIntegrationRequest, params: RequestParams = {}) =>
+    this.request<WeightClassDto[], ProblemDetails>({
+      path: `/api/weightclasses`,
+      method: 'POST',
+      body: data,
+      format: 'json',
+      ...params,
+    })
+  }
