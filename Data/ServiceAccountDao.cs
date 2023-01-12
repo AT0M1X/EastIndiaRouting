@@ -3,6 +3,7 @@ using EIT.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Expressions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -40,6 +41,15 @@ namespace EIT.Data
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
                 return routingContext.ServiceAccounts.Where(s => s.CompanyName == name).FirstOrDefault();
+            }
+        }
+
+        public ServiceAccount GetServiceAccount(Guid collaborationID)
+        {
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.ServiceAccounts.Where(s => s.CollaborationID == collaborationID).FirstOrDefault();
             }
         }
 

@@ -19,9 +19,9 @@ namespace EIT.RoutePlanner
 
         private readonly CityService _cityService;
         private readonly RouteService _routeService;
-        private readonly ExternalRouteService _externalRouteService;
+        private readonly IExternalRouteService _externalRouteService;
 
-        public RoutePlanner(RouteService routeService, CityService cityService, ExternalRouteService externalRouteService)
+        public RoutePlanner(RouteService routeService, CityService cityService, IExternalRouteService externalRouteService)
         {
             _routeService = routeService;
             _cityService = cityService;

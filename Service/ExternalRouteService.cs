@@ -5,6 +5,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using EIT.DTOs;
 using EIT.Interfaces;
+using Azure.Core;
 
 namespace EIT.Service
 {
@@ -17,6 +18,8 @@ namespace EIT.Service
                 client.BaseAddress = new Uri("http://localhost:6004/");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                client.DefaultRequestHeaders.Add("correlationID", Guid.NewGuid().ToString());
+                client.DefaultRequestHeaders.Add("collaborationID", "6b1af4a5-dd96-4f61-8631-69aabd684b2c");
                 var req = new RouteIntegrationRequest() 
                 {
                     From = findRouteDto.From,
@@ -27,13 +30,13 @@ namespace EIT.Service
                     Weight = findRouteDto.Weight,
                     Width = findRouteDto.Width,
                     Height = findRouteDto.Height,
-                    Depth = findRouteDto.Lenght,
+                    Depth = findRouteDto.Length,
                     Recommended = findRouteDto.Recommended
                 };
 
                 HttpResponseMessage response = client.PostAsJsonAsync("GetRoute", req).Result;
 
-                if (response.IsSuccessStatusCode)
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var json = response.Content.ReadAsStringAsync().Result;
                     var res = Newtonsoft.Json.JsonConvert.DeserializeObject<RouteIntegrationResponse>(json);
