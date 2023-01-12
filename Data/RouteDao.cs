@@ -9,34 +9,47 @@ namespace EIT.Data
 {
     public class RouteDao
     {
-        private RoutingContext _routingContext;
-        public RouteDao(IServiceScopeFactory serviceScopeFactory) 
+        private IServiceScopeFactory _serviceScopeFactory;
+        public RouteDao(IServiceScopeFactory serviceScopeFactory)
         {
-            using (var scope = serviceScopeFactory.CreateScope())
-            {
-                _routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-            }
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public List<Route> GetAllRoutes()
         {
-            return _routingContext.Routes.ToList();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.Routes.ToList();
+            }
         }
 
         public Route GetRoute(int id)
         {
-            return _routingContext.Routes.Where(r => r.RouteID == id).FirstOrDefault();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.Routes.Where(r => r.RouteID == id).FirstOrDefault();
+            }
         }
 
         public Route GetRoute(City origin, City destination)
         {
-            return _routingContext.Routes.Where(r => r.OriginCity.CityID == origin.CityID && r.DestinationCity.CityID == destination.CityID).FirstOrDefault();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.Routes.Where(r => r.OriginCity.CityID == origin.CityID && r.DestinationCity.CityID == destination.CityID).FirstOrDefault();
+            }
         }
 
         public void AddRoute(Route Route)
         {
-            _routingContext.Add(Route);
-            _routingContext.SaveChanges();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                routingContext.Add(Route);
+                routingContext.SaveChanges();
+            }
         }
     }
 }

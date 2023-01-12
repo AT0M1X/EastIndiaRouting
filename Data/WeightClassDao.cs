@@ -9,34 +9,48 @@ namespace EIT.Data
 {
     public class WeightClassDao
     {
-        private RoutingContext _routingContext;
-        public WeightClassDao(IServiceScopeFactory serviceScopeFactory) 
+        private IServiceScopeFactory _serviceScopeFactory;
+        public WeightClassDao(IServiceScopeFactory serviceScopeFactory)
         {
-            using (var scope = serviceScopeFactory.CreateScope())
-            {
-                _routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-            }
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public List<WeightClass> GetAllWeightClasses()
         {
-            return _routingContext.WeightClasses.ToList();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.WeightClasses.ToList();
+            }
         }
 
         public WeightClass GetWeightClass(int id)
         {
-            return _routingContext.WeightClasses.Where(w => w.WeightClassID == id).FirstOrDefault();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.WeightClasses.Where(w => w.WeightClassID == id).FirstOrDefault();
+            }
         }
+
 
         public WeightClass GetWeightClass(int minimumWeight, int maximumWeight)
         {
-            return _routingContext.WeightClasses.Where(w => w.MinimumWeight == minimumWeight && w.MaximumWeight == maximumWeight).FirstOrDefault();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.WeightClasses.Where(w => w.MinimumWeight == minimumWeight && w.MaximumWeight == maximumWeight).FirstOrDefault();
+            }
         }
 
         public void AddWeightClass(WeightClass weightClass)
         {
-            _routingContext.Add(weightClass);
-            _routingContext.SaveChanges();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                routingContext.Add(weightClass);
+                routingContext.SaveChanges();
+            }
         }
     }
 }

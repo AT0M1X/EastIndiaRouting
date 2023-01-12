@@ -9,34 +9,47 @@ namespace EIT.Data
 {
     public class RoleDao
     {
-        private RoutingContext _routingContext;
-        public RoleDao(IServiceScopeFactory serviceScopeFactory) 
+        private IServiceScopeFactory _serviceScopeFactory;
+        public RoleDao(IServiceScopeFactory serviceScopeFactory)
         {
-            using (var scope = serviceScopeFactory.CreateScope())
-            {
-                _routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-            }
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public List<Role> GetAllRoles()
         {
-            return _routingContext.Roles.ToList();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.Roles.ToList();
+            }
         }
 
         public Role GetRole(int id)
         {
-            return _routingContext.Roles.Where(r => r.RoleID == id).FirstOrDefault();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.Roles.Where(r => r.RoleID == id).FirstOrDefault();
+            }
         }
 
         public Role GetRole(string name)
         {
-            return _routingContext.Roles.Where(r => r.RoleName == name).FirstOrDefault();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.Roles.Where(r => r.RoleName == name).FirstOrDefault();
+            }
         }
 
         public void AddRole(Role role)
         {
-            _routingContext.Add(role);
-            _routingContext.SaveChanges();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                routingContext.Add(role);
+                routingContext.SaveChanges();
+            }
         }
     }
 }

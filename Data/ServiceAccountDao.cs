@@ -10,34 +10,47 @@ namespace EIT.Data
 {
     public class ServiceAccountDao
     {
-        private RoutingContext _routingContext;
-        public ServiceAccountDao(IServiceScopeFactory serviceScopeFactory) 
+        private IServiceScopeFactory _serviceScopeFactory;
+        public ServiceAccountDao(IServiceScopeFactory serviceScopeFactory)
         {
-            using (var scope = serviceScopeFactory.CreateScope())
-            {
-                _routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-            }
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public List<ServiceAccount> GetAllServiceAccounts()
         {
-            return _routingContext.ServiceAccounts.ToList();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.ServiceAccounts.ToList();
+            }
         }
 
         public ServiceAccount GetServiceAccount(int id)
         {
-            return _routingContext.ServiceAccounts.Where(s => s.ServiceAccountID == id).FirstOrDefault();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.ServiceAccounts.Where(s => s.ServiceAccountID == id).FirstOrDefault();
+            }
         }
 
         public ServiceAccount GetServiceAccount(string name)
         {
-            return _routingContext.ServiceAccounts.Where(s => s.CompanyName == name).FirstOrDefault();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                return routingContext.ServiceAccounts.Where(s => s.CompanyName == name).FirstOrDefault();
+            }
         }
 
         public void AddServiceAccount(ServiceAccount ServiceAccount)
         {
-            _routingContext.Add(ServiceAccount);
-            _routingContext.SaveChanges();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
+                routingContext.Add(ServiceAccount);
+                routingContext.SaveChanges();
+            }
         }
     }
 }
