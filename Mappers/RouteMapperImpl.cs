@@ -13,17 +13,17 @@ namespace EIT.Mappers
             {
                 return null;
             }
-            var origin = cities.Where(city => city.CityID == route.OriginCity.CityID).FirstOrDefault();
-            var destination = cities.Where(city => city.CityID == route.DestinationCity.CityID).FirstOrDefault();
+            var origin = cities.Where(city => city.CityID == route.OriginCityCityId).FirstOrDefault();
+            var destination = cities.Where(city => city.CityID == route.DestinationCityCityId).FirstOrDefault();
             return new RouteDto()
             {
                 Id = route.RouteID,
-                From = route.OriginCity.CityName,
-                To = route.DestinationCity.CityName,
+                From = origin.CityName,
+                To = destination.CityName,
                 Time = route.Segments * 12,
                 Segments = route.Segments,
-                FromId=route.OriginCity.CityID,
-                ToId=route.DestinationCity.CityID
+                FromId = route.OriginCityCityId,
+                ToId = route.DestinationCityCityId
             };
         }
 

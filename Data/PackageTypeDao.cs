@@ -29,7 +29,7 @@ namespace EIT.Data
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.PackageTypes.Where(p => p.PackageTypeID == id).First();
+                return routingContext.PackageTypes.Where(p => p.PackageTypeID == id).FirstOrDefault();
             }
         }
 
@@ -38,7 +38,7 @@ namespace EIT.Data
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.PackageTypes.Where(p => p.PackageTypeName == name).First();
+                return routingContext.PackageTypes.Where(p => p.PackageTypeName == name).FirstOrDefault();
             }
         }
 

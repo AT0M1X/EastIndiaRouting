@@ -38,7 +38,7 @@ namespace EIT.Data
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var routingContext = scope.ServiceProvider.GetRequiredService<RoutingContext>();
-                return routingContext.Routes.Where(r => r.OriginCity.CityID == origin.CityID && r.DestinationCity.CityID == destination.CityID).FirstOrDefault();
+                return routingContext.Routes.Where(r => r.OriginCityCityId == origin.CityID && r.DestinationCityCityId == destination.CityID).FirstOrDefault();
             }
         }
 
