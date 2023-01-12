@@ -1,6 +1,7 @@
 using System;
 using EIT.Context;
 using EIT.Data;
+using EIT.Interfaces;
 using EIT.Mappers;
 using EIT.Model.Configuration;
 using EIT.Service;
@@ -41,6 +42,7 @@ namespace EIT
             });
 
             services.AddControllers();
+            services.AddTransient<IRoutePlanner, RoutePlanner.RoutePlanner>();
             AddServicesForDependencyInjection(services);
             AddDaoForDependencyInjection(services);
             AddMappersForDependencyInjection(services);

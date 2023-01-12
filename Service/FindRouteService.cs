@@ -1,4 +1,6 @@
 ﻿using EIT.DTOs;
+using EIT.Interfaces;
+using EIT.Model;
 using System;
 
 namespace EIT.Service
@@ -7,13 +9,15 @@ namespace EIT.Service
     {
         private readonly CityService _cityService;
         private readonly PackageTypeService _packageTypeService;
-        public FindRouteService(CityService cityService, PackageTypeService packageTypeService)
+        private readonly IRoutePlanner _routePlanner;
+        public FindRouteService(CityService cityService, PackageTypeService packageTypeService, IRoutePlanner routePlanner)
         {
             _cityService = cityService;
             _packageTypeService = packageTypeService;
+            _routePlanner = routePlanner;
         }
 
-        public void FindRoutes(FindRouteDto findRouteDto)
+        public RouteResult FindRoutes(FindRouteDto findRouteDto)
         {
             var origin = _cityService.GetCity(findRouteDto.From);
             if (origin == null)
@@ -32,6 +36,8 @@ namespace EIT.Service
             {
                 throw new ArgumentException();
             }
+
+            return _routePlanner.GetRoute(origin.Id, destination.Id, findRouteDto.Weight);
         }
     }
 }
