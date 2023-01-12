@@ -47,12 +47,13 @@ const BookingPage = () => {
     setDefaultRequest();
   }, []);
 
-  const handleChange = (event) => {};
+  const handleChange = (event) => {
+    setRouteRequest({ ...routeRequest, ["type"]: event.target.value })
+  }
 
   const handlePackageInfoChange = (e) => {
-    setRouteRequest({ ...routeRequest, [e.target.name]: e.target.value });
-    console.info(routeRequest);
-  };
+    setRouteRequest({ ...routeRequest, [e.target.name]: e.target.value })
+  }
 
   return (
     <Page headerTitle={"Make a Package Delivery"}>
@@ -60,7 +61,9 @@ const BookingPage = () => {
         <Banner>
           <div>{title}</div>
         </Banner>
-        <MainView></MainView>
+        <MainView>
+          <WhatComponent PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
+        </MainView>
         <ButtonContainer>
           <Button
             onClick={() => {
