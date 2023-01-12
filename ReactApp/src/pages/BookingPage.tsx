@@ -37,9 +37,13 @@ const BookingPage: FunctionComponent = () => {
     setDefaultRequest()
   }, [])
 
+  const handleChange = (event) => {
+
+  }
+
   return (
     <Page headerTitle={"Make a Package Delivery"}>
-      <PackageTypeDropdown PackageTypes={packageTypes}/>
+      <PackageTypeDropdown PackageTypes={packageTypes} onSelectClick={handleChange}/>
     </Page>)
 };
 

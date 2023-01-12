@@ -1,15 +1,16 @@
-import { FunctionComponent } from "react";
+import { ChangeEvent, FunctionComponent } from "react";
 import { PackageTypeDto } from "../services/swaggerapi/data-contracts";
 
 interface SelectProps {
     PackageTypes: Array<PackageTypeDto>
-    onSelectClick?: (event: React.MouseEvent, value: string) => void
+    onSelectClick: (e: React.ChangeEvent<HTMLSelectElement>) => void
   }
 
 const PackageTypeDropdown = (props: SelectProps) => {
+  const { PackageTypes, onSelectClick } = props
     const dropdownListe =
-    props.PackageTypes.length > 0 &&
-    props.PackageTypes.map((item) => {
+    PackageTypes.length > 0 &&
+    PackageTypes.map((item) => {
         return (
           <option
             key={`${item.id},${item.name}`}
@@ -24,7 +25,7 @@ const PackageTypeDropdown = (props: SelectProps) => {
     return (
         <div>
             <select
-        //onChange={(e) => handleSelectedFag(e)}
+        onChange={onSelectClick}
         className='item form-select'
         style={{ width: 'auto', maxWidth: '40rem' }}
       >
