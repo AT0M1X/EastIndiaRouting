@@ -141,6 +141,9 @@ const BookingPage = () => {
           { stage == 1 &&
             <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
           }
+          { stage == 2 &&
+            <FromToComponent Cities={[{id: 1,name: 'stad'}, {id: 1,name: 'stad2'}]} onSelectClick={() => {}} />
+          }
           { stage == 3 &&
               <PriceAndRouteComponent from={routeRequest?.from!} to={routeRequest?.to!} price={routeResponse?.cost!} duration={routeResponse?.time!} />
           }
@@ -156,7 +159,6 @@ const BookingPage = () => {
               Customer = {`${customerInfo?.Customer} - ${customerInfo?.EMail} - ${customerInfo?.Phone}`}/>
           }
         </MainView>
-        <MainView><FromToComponent Cities={[{id: 1,name: 'stad'}, {id: 1,name: 'stad2'}]} onSelectClick={() => {}}></FromToComponent></MainView>
         <ButtonContainer>
           <Button
             onClick={() => {
