@@ -45,6 +45,17 @@ builder.Services.AddSingleton<IWeightClassMapper, WeightClassMapperImpl>();
 builder.Services.AddTransient<IRoutePlanner, RoutePlanner>();
 builder.Services.AddTransient<IExternalRouteService, ExternalRouteService>();
 
+builder.Services.AddCors(o => o.AddPolicy("MainPolicy", builder =>
+{
+    builder
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        //.AllowCredentials()
+        .AllowAnyOrigin()
+        //.WithOrigins(<Array of corsenabled urls>) // Indsættes fra config.
+        ;
+}));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -52,7 +63,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
+app.UseCors("MainPolicy");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
