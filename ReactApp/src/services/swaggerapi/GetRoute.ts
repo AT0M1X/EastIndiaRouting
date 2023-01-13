@@ -20,7 +20,7 @@ export class GetRoute<SecurityDataType = unknown> extends HttpClient<SecurityDat
    * @name GetRoute
    * @request POST:/GetRoute
    * @response `200` `RouteIntegrationResponse` Success
-   * @response `204` `void` No Content
+   * @response `204` `void` Success
    * @response `400` `ProblemDetails` Bad Request
    */
   getRoute = (data: RouteIntegrationRequest, params: RequestParams = {}) =>

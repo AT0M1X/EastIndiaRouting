@@ -12,15 +12,14 @@
 export interface CityDto {
   /** @format int32 */
   id: number;
-  /** @minLength 1 */
   name: string;
 }
 
 export interface PackageTypeDto {
   /** @format int32 */
   id: number;
-  /** @minLength 1 */
   name: string;
+  supported: boolean;
 }
 
 export interface ProblemDetails {
@@ -36,9 +35,7 @@ export interface ProblemDetails {
 export interface RouteDto {
   /** @format int32 */
   id: number;
-  /** @minLength 1 */
   from: string;
-  /** @minLength 1 */
   to: string;
   /** @format int32 */
   time: number;
@@ -48,6 +45,8 @@ export interface RouteDto {
   fromId: number;
   /** @format int32 */
   toId: number;
+  /** @format int32 */
+  cost: number;
 }
 
 export interface RouteIntegrationRequest {

@@ -67,7 +67,7 @@ interface SelectProps {
 const PackageTypeDropdown = (props: SelectProps) => {
   const { InputData, PackageTypes, onSelectClick } = props
     const dropdownListe =
-    PackageTypes.length > 0 &&
+    PackageTypes?.length! > 0 &&
     PackageTypes.map((item) => {
         return (
           <option
@@ -87,7 +87,7 @@ const PackageTypeDropdown = (props: SelectProps) => {
         onChange={onSelectClick}
         className='item form-select'
         style={{ width: 'auto', maxWidth: '40rem' }}
-        value={InputData?.type ?? ""}
+        value={InputData?.type! ?? ""}
       >
         {dropdownListe}
       </StyledSelect>
