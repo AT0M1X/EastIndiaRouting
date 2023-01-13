@@ -20,14 +20,7 @@ const HomePage: FunctionComponent = () => {
           <div>The Best Parcel Delivery Service in Africa</div>
         </Banner>
         <ButtonContainer>
-          <Button
-            onClick={() => {
-              console.log("asd");
-            }}
-          >
-            Sign in To Book
-          </Button>
-          <Button onClick={navigateToLogin}>Login</Button>
+          <Button onClick={navigateToLogin}>Sign in To Book</Button>
         </ButtonContainer>
       </BottomContainer>
     </Page>
