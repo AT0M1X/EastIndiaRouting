@@ -7,6 +7,7 @@ import React, {
 import Page from "../components/Page";
 import FrontServiceApi from "../services/FrontServiceApi";
 import {
+  CityDto,
   PackageTypeDto,
   RouteIntegrationRequest,
   RouteIntegrationResponse,
@@ -34,6 +35,7 @@ import FromToComponent from "../components/FromToComponent";
 
 const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
+  const [cities, setCities] = useState<CityDto[]>([]);
   const [routeRequest, setRouteRequest] = useState<RouteIntegrationRequest>();
   const [routeResponse, setRouteRespone] = useState<RouteIntegrationResponse>();
   const [summary, setSummary] = useState<SummaryProps>();
@@ -75,6 +77,15 @@ const BookingPage = () => {
         console.log(reason);
       });
 
+      const cityPromise = FrontServiceApi.getAllCities();
+      cityPromise
+        .then((cityDto) => {
+          setCities(cityDto.data);
+        })
+        .catch((reason) => {
+          console.log(reason);
+        });
+
     setDefaultRequest();
   }, []);
 
@@ -115,6 +126,16 @@ const BookingPage = () => {
     setRouteRequest({ ...routeRequest, ["type"]: event.target.value })
   }
 
+  const handleFromChange = (event) => {
+    console.info(routeRequest)
+    setRouteRequest({ ...routeRequest, ["from"]: event.target.value })
+  }
+
+  const handleToChange = (event) => {
+    console.info(routeRequest)
+    setRouteRequest({ ...routeRequest, ["to"]: event.target.value })
+  }
+
   const handlePackageInfoChange = (e) => {
     setRouteRequest({ ...routeRequest, [e.target.name]: e.target.value })
   }
@@ -142,7 +163,7 @@ const BookingPage = () => {
             <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
           }
           { stage == 2 &&
-            <FromToComponent Cities={[{id: 1,name: 'stad'}, {id: 1,name: 'stad2'}]} onSelectClick={() => {}} />
+            <FromToComponent Cities={cities} onSelectFromClick={handleFromChange} onSelectToClick={handleToChange}/>
           }
           { stage == 3 &&
               <PriceAndRouteComponent from={routeRequest?.from!} to={routeRequest?.to!} price={routeResponse?.cost!} duration={routeResponse?.time!} />
