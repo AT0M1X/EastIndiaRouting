@@ -49,7 +49,7 @@ const Content = styled.div`
 
 const InputContainer = styled.div`
   display: flex;
-  max-width: 150px;
+  max-width: 350px;
   width: auto;
 `
 const TextInput = styled(BaseInput).attrs((props) => ({
