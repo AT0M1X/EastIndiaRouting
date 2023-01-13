@@ -5,17 +5,20 @@ import styled from 'styled-components';
 
 const RowContainer = styled.div`
   display: flex;
-  max-width: 300px;
+  max-width: 600px;
   flex-direction: row;
   margin: auto;
   `
 
 const OutputContainer = styled.div`
-  max-width: 100px;
-  width: auto;
+  max-width: 200px;
+  width: 200px;
   border-radius: 10px;
-  margin: auto;
   background-color: white;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
 `
 
 const TitleValue = styled.div`
