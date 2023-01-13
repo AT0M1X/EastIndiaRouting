@@ -12,8 +12,8 @@ const FLabel = styled.label`
   padding-bottom: 1.5rem;
   padding-right: 4px;
   padding-left: 10px;
-  max-width: 100px;
-  width: 100px;
+  max-width: 200px;
+  width: 200px;
 `
 
 const BaseInput = styled.input.attrs((props) => ({
@@ -61,7 +61,7 @@ const TextInput = styled(BaseInput).attrs((props) => ({
   `
 
 const PackageInfoContainer = styled.div`
-  max-width: 300px;
+  max-width: 400px;
   width: auto;
   background-color: #22AAA1;
   border-radius: 10px;
@@ -84,7 +84,7 @@ const {InputData, handleChange} = props
         <PackageInfoContainer>
             <RowContainer>
             <Content>
-                  <FormLabel text={'Weight:'} />
+                  <FormLabel text={'Weight(g):'} />
                   <InputContainer>
                     <TextInput
                       onChange={handleChange}
@@ -96,7 +96,7 @@ const {InputData, handleChange} = props
               </RowContainer>
               <RowContainer>
                 <Content>
-                  <FormLabel text={'Height:'} />
+                  <FormLabel text={'Height(cm):'} />
                   <InputContainer>
                     <TextInput
                       onChange={handleChange}
@@ -108,7 +108,7 @@ const {InputData, handleChange} = props
               </RowContainer>
               <RowContainer>
                 <Content>
-                  <FormLabel text={'Width:'} />
+                  <FormLabel text={'Width(cm):'} />
                   <InputContainer>
                     <TextInput
                       onChange={handleChange}
@@ -120,7 +120,7 @@ const {InputData, handleChange} = props
               </RowContainer>
               <RowContainer>
                 <Content>
-                  <FormLabel text={'Length:'} />
+                  <FormLabel text={'Length(cm):'} />
                   <InputContainer>
                     <TextInput
                       onChange={handleChange}

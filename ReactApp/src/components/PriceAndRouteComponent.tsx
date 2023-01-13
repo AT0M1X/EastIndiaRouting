@@ -5,18 +5,17 @@ import styled from 'styled-components';
 
 const RowContainer = styled.div`
   display: flex;
+  max-width: 300px;
   flex-direction: row;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin: auto;
   `
 
 const OutputContainer = styled.div`
-  display: grid;
-  grid-template-areas: 
-            "title"
-            "value";
-  max-width: 150px;
+  max-width: 100px;
   width: auto;
+  border-radius: 10px;
+  margin: auto;
+  background-color: white;
 `
 
 const TitleValue = styled.div`
@@ -41,15 +40,15 @@ const PriceAndRouteComponent = (props: PriceAndRouteProps) => {
         <RowContainer>
             <OutputContainer>
                 <TitleValue> Route </TitleValue>
-                <OutputValue>`${from} - ${to}`</OutputValue>
+                <OutputValue>{`${from} - ${to}`}</OutputValue>
             </OutputContainer>
             <OutputContainer>
                 <TitleValue> Price </TitleValue>
-                <OutputValue>{price}</OutputValue>
+                <OutputValue>{`${price} $`}</OutputValue>
             </OutputContainer>
             <OutputContainer>
                 <TitleValue> Time </TitleValue>
-                <OutputValue>`${duration} hours`</OutputValue>
+                <OutputValue>{`${duration} hours`}</OutputValue>
             </OutputContainer>
         </RowContainer>
     );

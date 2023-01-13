@@ -9,21 +9,33 @@ import FrontServiceApi from "../services/FrontServiceApi";
 import {
   PackageTypeDto,
   RouteIntegrationRequest,
+  RouteIntegrationResponse,
 } from "../services/swaggerapi/data-contracts";
 import styled, { css } from "styled-components";
 import WhatComponent from "../components/WhatComponent";
 import WhoComponent from "../components/WhoComponent";
+import PriceAndRouteComponent from "../components/PriceAndRouteComponent";
+import SummaryComponent from "../components/SummaryComponent";
+
+interface SummaryProps {
+  OrderID: string
+  Package: string
+  Route: string
+  Prices: string
+  Customer: string
+}
 
 interface CustomerInfo {
   Customer?: string | undefined
   Phone?: string | undefined
   EMail?: string | undefined
 }
-import PriceAndRouteComponent from "../components/PriceAndRouteComponent";
 
 const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
   const [routeRequest, setRouteRequest] = useState<RouteIntegrationRequest>();
+  const [routeResponse, setRouteRespone] = useState<RouteIntegrationResponse>();
+  const [summary, setSummary] = useState<SummaryProps>();
   const [title, setTitle] = useState<string>("Specify The Parameters of Your Parcel");
   const [stage, setStage] = useState<number>(1);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>();
@@ -66,7 +78,6 @@ const BookingPage = () => {
   }, []);
 
   useEffect(() => {
-    console.info(routeRequest)
     switch(stage){
       case 1:
         setTitle("Specify The Parameters of Your Parcel")
@@ -75,6 +86,17 @@ const BookingPage = () => {
         setTitle("Choose a Starting and Destination Point")
         return
       case 3:
+        if (routeRequest)
+        {
+          const promise = FrontServiceApi.getRoute(routeRequest);
+          promise
+          .then((response) => {
+            setRouteRespone(response.data);
+          })
+          .catch((reason) => {
+            console.log(reason);
+        });
+        }
         setTitle("Choose a Preferable Route")
          return
       case 4:
@@ -119,10 +141,18 @@ const BookingPage = () => {
             <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
           }
           { stage == 3 &&
-              <PriceAndRouteComponent from="hej" to="då" price={1233} duration={122} />
+              <PriceAndRouteComponent from={routeRequest?.from!} to={routeRequest?.to!} price={routeResponse?.cost!} duration={routeResponse?.time!} />
           }
           { stage == 4 &&
             <WhoComponent Customer={customerInfo!} handleInputChange={handleCustomerInfoChange} />
+          }
+          { stage == 5 &&
+            <SummaryComponent 
+              OrderID={summary?.OrderID!} 
+              Package={`${routeRequest?.type} - ${routeRequest?.weight}g`} 
+              Route = {`${routeRequest?.from} - ${routeRequest?.to}`}
+              Prices = {`${routeResponse?.cost}$`}
+              Customer = {`${customerInfo?.Customer} - ${customerInfo?.EMail} - ${customerInfo?.Phone}`}/>
           }
         </MainView>
         <ButtonContainer>
