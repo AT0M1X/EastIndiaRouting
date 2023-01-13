@@ -40,6 +40,17 @@ const StyledSelect = styled(BaseInput).attrs((props) => ({
 }))`
   border: 1px solid #747474;
   border-radius: 4px;
+  max-height: 50px;
+  max-width: 100px;
+`
+
+const PackageInfoContainer = styled.div`
+max-width: 500px;
+width: auto;
+background-color: #22AAA1;
+border-radius: 10px;
+display: flex;
+  flex-direction: row;
 `
 
 const FormLabel = (props) => {
@@ -70,7 +81,7 @@ const PackageTypeDropdown = (props: SelectProps) => {
       })
 
     return (
-        <div>
+        <PackageInfoContainer>
           <FormLabel text={'Choose package type:'} />
             <StyledSelect
         onChange={onSelectClick}
@@ -80,7 +91,7 @@ const PackageTypeDropdown = (props: SelectProps) => {
       >
         {dropdownListe}
       </StyledSelect>
-        </div>
+        </PackageInfoContainer>
     )
 }
 
