@@ -33,18 +33,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="logs\" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Compile Remove="CESAPI\**" />
+    <Compile Remove="Data\**" />
     <Content Remove="$(SpaRoot)\**" />
     <Content Remove="CESAPI\**" />
+    <Content Remove="Data\**" />
     <EmbeddedResource Remove="CESAPI\**" />
+    <EmbeddedResource Remove="Data\**" />
     <None Remove="$(SpaRoot)\**" />
     <None Remove="CESAPI\**" />
+    <None Remove="Data\**" />
     <None Include="$(SpaRoot)\**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
   

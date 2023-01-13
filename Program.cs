@@ -1,6 +1,4 @@
 using System;
-using EIT.Context;
-using EIT.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
