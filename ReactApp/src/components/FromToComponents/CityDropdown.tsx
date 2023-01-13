@@ -42,11 +42,6 @@ const StyledSelect = styled(BaseInput).attrs((props) => ({
   border-radius: 4px;
 `
 
-const FormLabel = (props) => {
-    const { text } = props
-    return <FLabel>{text}</FLabel>
-}
-
 interface SelectProps {
     Cities: Array<CityDto>
     Value: string
@@ -56,13 +51,13 @@ interface SelectProps {
 const CityDropdown = (props: SelectProps) => {
     const { Cities, onSelectClick, Value } = props
     const dropdownListe =
-        Cities.length > 0 &&
+        Cities?.length! > 0 &&
         Cities.map((item) => {
             return (
                 <option
-                    key={`${item.id},${item.name}`}
-                    id={`${item.id}`}
-                    value={`${item.name}`}
+                    key={`${item.id!},${item.name!}`}
+                    id={`${item.id!}`}
+                    value={`${item.name!}`}
                 >
                     {`${item.name}`}
                 </option>

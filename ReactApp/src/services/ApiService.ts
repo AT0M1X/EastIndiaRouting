@@ -6,6 +6,7 @@ import {
     RouteIntegrationRequest,
     RouteIntegrationResponse,
     WeightClassDto,
+    RouteResult,
   } from './swaggerapi/data-contracts'
   import { ContentType, HttpClient, RequestParams } from './swaggerapi/http-client'
 
@@ -48,6 +49,14 @@ import {
       path: `/GetRoute`,
       method: 'POST',
       body: data,
+      format: 'json',
+      ...params,
+    })
+
+    findRoute = (from: string, to: string, weight: number, length: number, width: number, height: number, packageType: string, arrivalTime:string, currency: string, params: RequestParams = {}) =>
+    this.request<RouteResult, ProblemDetails>({
+      path: `/findInternalRoute?from=${from}&to=${to}&weight=${weight}&length=${length}&width=${width}&height=${height}&packageType=${packageType}&arrivalTime=${arrivalTime}&currency=${currency}&recommended=false`,
+      method: 'Get',
       format: 'json',
       ...params,
     })

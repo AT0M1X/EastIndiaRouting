@@ -72,6 +72,7 @@ export interface RouteIntegrationResponse {
   cost?: number;
   /** @format int32 */
   time?: number;
+  
 }
 
 export interface WeightClassDto {
@@ -83,4 +84,12 @@ export interface WeightClassDto {
   maximumWeight: number;
   /** @format int32 */
   price: number;
+}
+
+export interface RouteResult {
+  From: number 
+  To: number
+  Cost: number
+  Time: number
+  CostToCompetitors: number
 }
