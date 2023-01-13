@@ -30,6 +30,7 @@ interface CustomerInfo {
   Phone?: string | undefined
   EMail?: string | undefined
 }
+import FromToComponent from "../components/FromToComponent";
 
 const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
@@ -140,6 +141,9 @@ const BookingPage = () => {
           { stage == 1 &&
             <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
           }
+          { stage == 2 &&
+            <FromToComponent Cities={[{id: 1,name: 'stad'}, {id: 1,name: 'stad2'}]} onSelectClick={() => {}} />
+          }
           { stage == 3 &&
               <PriceAndRouteComponent from={routeRequest?.from!} to={routeRequest?.to!} price={routeResponse?.cost!} duration={routeResponse?.time!} />
           }
@@ -185,7 +189,6 @@ const BookingView = styled.div`
 `;
 
 const MainView = styled.div`
-  height: 400px;
 `;
 
 const Button = styled.button`
@@ -195,7 +198,7 @@ const Button = styled.button`
   color: black;
   margin: 0.5em 1em;
   padding: 0.25em 1em;
-  hight: 50px;
+  height: 50px;
   width: 150px;
 `;
 
