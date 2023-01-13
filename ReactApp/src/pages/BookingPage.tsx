@@ -11,12 +11,14 @@ import {
   PackageTypeDto,
   RouteIntegrationRequest,
   RouteIntegrationResponse,
+  RouteResult,
 } from "../services/swaggerapi/data-contracts";
 import styled, { css } from "styled-components";
 import WhatComponent from "../components/WhatComponent";
 import WhoComponent from "../components/WhoComponent";
 import PriceAndRouteComponent from "../components/PriceAndRouteComponent";
 import SummaryComponent from "../components/SummaryComponent";
+import { format } from 'date-fns'
 
 interface SummaryProps {
   OrderID: string
@@ -37,11 +39,15 @@ const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
   const [cities, setCities] = useState<CityDto[]>([]);
   const [routeRequest, setRouteRequest] = useState<RouteIntegrationRequest>();
-  const [routeResponse, setRouteRespone] = useState<RouteIntegrationResponse>();
+  const [routeResponse, setRouteRespone] = useState<RouteResult>();
   const [summary, setSummary] = useState<SummaryProps>();
   const [title, setTitle] = useState<string>("Specify The Parameters of Your Parcel");
   const [stage, setStage] = useState<number>(1);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>();
+  const [displayInput, setDisplayInput] = useState<boolean>(false);
+  const [displayResult, setDisplayResult] = useState<boolean>(false);
+  const [loadRoutes, setLoadRoutes] = useState<boolean>(true);
+  const [cost, setCost] = useState<number>(0);
 
   const setDefaultRequest = () => {
     setRouteRequest({
@@ -90,6 +96,20 @@ const BookingPage = () => {
   }, []);
 
   useEffect(() => {
+    if (packageTypes.length > 0 && cities.length > 0)
+    {
+      setDisplayInput(true);
+    }
+  }, [packageTypes, cities]);
+
+  useEffect(() => {
+    if (routeResponse)
+    {
+      setDisplayResult(true);
+    }
+  }, [routeResponse]);
+
+  useEffect(() => {
     switch(stage){
       case 1:
         setTitle("Specify The Parameters of Your Parcel")
@@ -98,12 +118,23 @@ const BookingPage = () => {
         setTitle("Choose a Starting and Destination Point")
         return
       case 3:
-        if (routeRequest)
+        if (routeRequest && loadRoutes)
         {
-          const promise = FrontServiceApi.getRoute(routeRequest);
+          const promise = FrontServiceApi.findRoute(
+            routeRequest.from!,
+            routeRequest.to!,
+            routeRequest.weight!,
+            routeRequest.depth!,
+            routeRequest.width!,
+            routeRequest.height!,
+            routeRequest.type!,
+            format(Date.now(), 'yyyy-MM-dd'),
+            "DKK"
+            );
           promise
           .then((response) => {
             setRouteRespone(response.data);
+            setCost(response.data.Cost)
           })
           .catch((reason) => {
             console.log(reason);
@@ -127,7 +158,6 @@ const BookingPage = () => {
   }
 
   const handleFromChange = (event) => {
-    console.info(routeRequest)
     setRouteRequest({ ...routeRequest, ["from"]: event.target.value })
   }
 
@@ -158,14 +188,14 @@ const BookingPage = () => {
           <div>{title}</div>
         </Banner>
         <MainView>
-          { stage == 1 &&
+          { stage == 1 && displayInput &&
             <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
           }
           { stage == 2 &&
             <FromToComponent From={routeRequest?.from!} To={routeRequest?.to!} Cities={cities} onSelectFromClick={handleFromChange} onSelectToClick={handleToChange}/>
           }
-          { stage == 3 &&
-              <PriceAndRouteComponent from={routeRequest?.from!} to={routeRequest?.to!} price={routeResponse?.cost!} duration={routeResponse?.time!} />
+          { stage == 3 && 
+              <PriceAndRouteComponent from={routeRequest?.from!} to={routeRequest?.to!} price={cost} duration={routeResponse?.Time!} costCompetitors={routeResponse?.CostToCompetitors!} />
           }
           { stage == 4 &&
             <WhoComponent Customer={customerInfo!} handleInputChange={handleCustomerInfoChange} />
@@ -175,7 +205,7 @@ const BookingPage = () => {
               OrderID={summary?.OrderID!} 
               Package={`${routeRequest?.type} - ${routeRequest?.weight}g`} 
               Route = {`${routeRequest?.from} - ${routeRequest?.to}`}
-              Prices = {`${routeResponse?.cost}$`}
+              Prices = {`${routeResponse?.Cost!}$`}
               Customer = {`${customerInfo?.Customer} - ${customerInfo?.EMail} - ${customerInfo?.Phone}`}/>
           }
         </MainView>

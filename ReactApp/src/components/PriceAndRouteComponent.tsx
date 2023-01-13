@@ -34,11 +34,12 @@ interface PriceAndRouteProps {
     to: string;
     price: number;
     duration: number;
+    costCompetitors: number;
 };
 
 const PriceAndRouteComponent = (props: PriceAndRouteProps) => {
-    const {from, to, price, duration} = props;
-
+    const {from, to, price, duration, costCompetitors} = props;
+    console.info(price);
     return (
         <RowContainer>
             <OutputContainer>
@@ -52,6 +53,10 @@ const PriceAndRouteComponent = (props: PriceAndRouteProps) => {
             <OutputContainer>
                 <TitleValue> Time </TitleValue>
                 <OutputValue>{`${duration} hours`}</OutputValue>
+            </OutputContainer>
+            <OutputContainer>
+                <TitleValue> Cost to competitors </TitleValue>
+                <OutputValue>{`${costCompetitors} $`}</OutputValue>
             </OutputContainer>
         </RowContainer>
     );
