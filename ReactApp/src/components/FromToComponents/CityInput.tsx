@@ -75,25 +75,27 @@ const FormLabel = (props) => {
 
 interface CityInputProps {
     cities: Array<CityDto>
+    From: string
+    To: string
     onSelectFromClick: (e: React.ChangeEvent<HTMLSelectElement>) => void
     onSelectToClick: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
 const CityInput = (props: CityInputProps) => {
-    const {cities, onSelectFromClick, onSelectToClick} = props
+    const {cities, onSelectFromClick, onSelectToClick, From, To} = props
 
     return (
             <RowContainer>
                 <Content>
                     <FormLabel text={'From:'} />
                     <InputContainer>
-                        <CityDropdown Cities={cities} onSelectClick={onSelectFromClick}/>
+                        <CityDropdown Value={From} Cities={cities} onSelectClick={onSelectFromClick}/>
                     </InputContainer>
                 </Content>
                 <Content>
                     <FormLabel text={'To:'} />
                     <InputContainer>
-                        <CityDropdown Cities={cities} onSelectClick={onSelectToClick}/>
+                        <CityDropdown Value={To} Cities={cities} onSelectClick={onSelectToClick}/>
                     </InputContainer>
                 </Content>
             </RowContainer>

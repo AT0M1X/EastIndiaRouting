@@ -11,15 +11,17 @@ import logo from "../assets/img/logo_2.png";
 
 interface CityComponentProps {
     Cities: Array<CityDto>
+    From: string
+    To: string
     onSelectFromClick: (e: React.ChangeEvent<HTMLSelectElement>) => void
     onSelectToClick: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
 const FromToComponent = (cityProps: CityComponentProps) => {
-    const { Cities, onSelectFromClick, onSelectToClick} = cityProps;
+    const { Cities, onSelectFromClick, onSelectToClick, From, To} = cityProps;
     return (
         <Container>
-            <CityInput cities={Cities} onSelectFromClick={onSelectFromClick} onSelectToClick={onSelectToClick}/>
+            <CityInput From={From} To={To} cities={Cities} onSelectFromClick={onSelectFromClick} onSelectToClick={onSelectToClick}/>
             <Map2></Map2>
         </Container>
     );

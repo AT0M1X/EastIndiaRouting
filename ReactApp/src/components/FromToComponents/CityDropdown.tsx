@@ -49,11 +49,12 @@ const FormLabel = (props) => {
 
 interface SelectProps {
     Cities: Array<CityDto>
+    Value: string
     onSelectClick: (e: React.ChangeEvent<HTMLSelectElement>) => void
 }
 
 const CityDropdown = (props: SelectProps) => {
-    const { Cities, onSelectClick } = props
+    const { Cities, onSelectClick, Value } = props
     const dropdownListe =
         Cities.length > 0 &&
         Cities.map((item) => {
@@ -74,6 +75,7 @@ const CityDropdown = (props: SelectProps) => {
                 onChange={onSelectClick}
                 className='item form-select'
                 style={{ width: 'auto', maxWidth: '40rem' }}
+                value={Value}
             >
                 {dropdownListe}
             </StyledSelect>
