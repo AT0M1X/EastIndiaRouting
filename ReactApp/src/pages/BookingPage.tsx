@@ -132,7 +132,6 @@ const BookingPage = () => {
   }
 
   const handleToChange = (event) => {
-    console.info(routeRequest)
     setRouteRequest({ ...routeRequest, ["to"]: event.target.value })
   }
 
@@ -163,7 +162,7 @@ const BookingPage = () => {
             <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
           }
           { stage == 2 &&
-            <FromToComponent Cities={cities} onSelectFromClick={handleFromChange} onSelectToClick={handleToChange}/>
+            <FromToComponent From={routeRequest?.from!} To={routeRequest?.to!} Cities={cities} onSelectFromClick={handleFromChange} onSelectToClick={handleToChange}/>
           }
           { stage == 3 &&
               <PriceAndRouteComponent from={routeRequest?.from!} to={routeRequest?.to!} price={routeResponse?.cost!} duration={routeResponse?.time!} />
