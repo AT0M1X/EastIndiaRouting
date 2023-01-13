@@ -20,11 +20,28 @@ namespace CESAPI.Service
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Add("correlationID", Guid.NewGuid().ToString());
                 client.DefaultRequestHeaders.Add("collaborationID", "f87c9339-ff39-4225-be09-fca238a03ede");
+                var telstraPackageType = "";
+                if (findRouteDto.PackageType == "Live Animals")
+                {
+                    telstraPackageType = "liveAnimals";
+                }
+                else if (findRouteDto.PackageType == "Cautious Parcels")
+                {
+                    telstraPackageType = "cautionsParcels";
+                }
+                else if (findRouteDto.PackageType == "Refrigerated Goods")
+                {
+                    telstraPackageType = "refrigertedGoods";
+                }
+                else
+                {
+                    telstraPackageType = findRouteDto.PackageType;
+                }
                 var req = new RouteIntegrationRequest()
                 {
                     From = findRouteDto.From,
                     To = findRouteDto.To,
-                    Type = findRouteDto.PackageType,
+                    Type = telstraPackageType,
                     ArrivalTime = findRouteDto.SendTime.ToString(),
                     Currency = findRouteDto.Currency,
                     Weight = findRouteDto.Weight,
