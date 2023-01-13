@@ -1,10 +1,5 @@
 using System;
-using EIT.Context;
-using EIT.Data;
-using EIT.Interfaces;
-using EIT.Mappers;
 using EIT.Model.Configuration;
-using EIT.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -42,8 +37,8 @@ namespace EIT
             });
 
             services.AddControllers();
-            services.AddTransient<IRoutePlanner, RoutePlanner.RoutePlanner>();
-            services.AddTransient<IExternalRouteService, ExternalRouteService>();
+            //services.AddTransient<IRoutePlanner, RoutePlanner.RoutePlanner>();
+            //services.AddTransient<IExternalRouteService, ExternalRouteService>();
             AddServicesForDependencyInjection(services);
             AddDaoForDependencyInjection(services);
             AddMappersForDependencyInjection(services);
@@ -68,7 +63,7 @@ namespace EIT
             else
                 services.AddSpaStaticFiles(configuration => configuration.RootPath = @"wwwroot");
 
-            services.AddDbContext<RoutingContext>(options => options.UseSqlServer(Configuration.GetConnectionString("RoutingContext")));
+            //services.AddDbContext<RoutingContext>(options => options.UseSqlServer(Configuration.GetConnectionString("RoutingContext")));
 
         }
 
@@ -103,33 +98,33 @@ namespace EIT
 
         private void AddServicesForDependencyInjection(IServiceCollection services)
         {
-            services.AddSingleton<CityService>();
-            services.AddSingleton<PackageTypeService>();
-            services.AddSingleton<RoleService>();
-            services.AddSingleton<RouteService>();
-            services.AddSingleton<ServiceAccountService>();
-            services.AddSingleton<FindRouteService>();
-            services.AddSingleton<WeightClassService>();
-            services.AddSingleton<AuthenticateService>();
+            //services.AddSingleton<CityService>();
+            //services.AddSingleton<PackageTypeService>();
+            //services.AddSingleton<RoleService>();
+            //services.AddSingleton<RouteService>();
+            //services.AddSingleton<ServiceAccountService>();
+            //services.AddSingleton<FindRouteService>();
+            //services.AddSingleton<WeightClassService>();
+            //services.AddSingleton<AuthenticateService>();
         }
 
         private void AddDaoForDependencyInjection(IServiceCollection services)
         {
-            services.AddSingleton<CityDao>();
-            services.AddSingleton<PackageTypeDao>();
-            services.AddSingleton<WeightClassDao>();
-            services.AddSingleton<RouteDao>();
-            services.AddSingleton<ServiceAccountDao>();
+            //services.AddSingleton<CityDao>();
+            //services.AddSingleton<PackageTypeDao>();
+            //services.AddSingleton<WeightClassDao>();
+            //services.AddSingleton<RouteDao>();
+            //services.AddSingleton<ServiceAccountDao>();
         }
 
         private void AddMappersForDependencyInjection(IServiceCollection services)
         {
-            services.AddSingleton<ICityMapper, CityMapperImpl>();
-            services.AddSingleton<IPackageTypeMapper, PackageTypeMapperImpl>();
-            services.AddSingleton<IRoleMapper, RoleMapperImpl>();
-            services.AddSingleton<IRouteMapper, RouteMapperImpl>();
-            services.AddSingleton<IServiceAccountMapper, ServiceAccountMapperImpl>();
-            services.AddSingleton<IWeightClassMapper, WeightClassMapperImpl>();
+            //services.AddSingleton<ICityMapper, CityMapperImpl>();
+            //services.AddSingleton<IPackageTypeMapper, PackageTypeMapperImpl>();
+            //services.AddSingleton<IRoleMapper, RoleMapperImpl>();
+            //services.AddSingleton<IRouteMapper, RouteMapperImpl>();
+            //services.AddSingleton<IServiceAccountMapper, ServiceAccountMapperImpl>();
+            //services.AddSingleton<IWeightClassMapper, WeightClassMapperImpl>();
         }
     }
 }
