@@ -1,5 +1,5 @@
 import { ChangeEvent, FunctionComponent } from "react";
-import { PackageTypeDto } from "../../services/swaggerapi/data-contracts";
+import { PackageTypeDto, RouteIntegrationRequest } from "../../services/swaggerapi/data-contracts";
 import styled from 'styled-components'
 
 const BaseInput = styled.select.attrs((props) => ({
@@ -40,6 +40,17 @@ const StyledSelect = styled(BaseInput).attrs((props) => ({
 }))`
   border: 1px solid #747474;
   border-radius: 4px;
+  max-height: 50px;
+  max-width: 100px;
+`
+
+const PackageInfoContainer = styled.div`
+max-width: 500px;
+width: auto;
+background-color: #22AAA1;
+border-radius: 10px;
+display: flex;
+  flex-direction: row;
 `
 
 const FormLabel = (props) => {
@@ -48,12 +59,13 @@ const FormLabel = (props) => {
 }
 
 interface SelectProps {
+    InputData: RouteIntegrationRequest
     PackageTypes: Array<PackageTypeDto>
     onSelectClick: (e: React.ChangeEvent<HTMLSelectElement>) => void
   }
 
 const PackageTypeDropdown = (props: SelectProps) => {
-  const { PackageTypes, onSelectClick } = props
+  const { InputData, PackageTypes, onSelectClick } = props
     const dropdownListe =
     PackageTypes.length > 0 &&
     PackageTypes.map((item) => {
@@ -69,16 +81,17 @@ const PackageTypeDropdown = (props: SelectProps) => {
       })
 
     return (
-        <div>
+        <PackageInfoContainer>
           <FormLabel text={'Choose package type:'} />
             <StyledSelect
         onChange={onSelectClick}
         className='item form-select'
         style={{ width: 'auto', maxWidth: '40rem' }}
+        value={InputData?.type ?? ""}
       >
         {dropdownListe}
       </StyledSelect>
-        </div>
+        </PackageInfoContainer>
     )
 }
 

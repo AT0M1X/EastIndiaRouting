@@ -43,6 +43,7 @@ namespace EIT
 
             services.AddControllers();
             services.AddTransient<IRoutePlanner, RoutePlanner.RoutePlanner>();
+            services.AddTransient<IExternalRouteService, ExternalRouteService>();
             AddServicesForDependencyInjection(services);
             AddDaoForDependencyInjection(services);
             AddMappersForDependencyInjection(services);
@@ -109,6 +110,7 @@ namespace EIT
             services.AddSingleton<ServiceAccountService>();
             services.AddSingleton<FindRouteService>();
             services.AddSingleton<WeightClassService>();
+            services.AddSingleton<AuthenticateService>();
         }
 
         private void AddDaoForDependencyInjection(IServiceCollection services)
@@ -117,6 +119,7 @@ namespace EIT
             services.AddSingleton<PackageTypeDao>();
             services.AddSingleton<WeightClassDao>();
             services.AddSingleton<RouteDao>();
+            services.AddSingleton<ServiceAccountDao>();
         }
 
         private void AddMappersForDependencyInjection(IServiceCollection services)

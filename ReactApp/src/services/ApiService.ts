@@ -44,7 +44,7 @@ import {
     })
 
     getRoute = (data: RouteIntegrationRequest, params: RequestParams = {}) =>
-    this.request<WeightClassDto[], ProblemDetails>({
+    this.request<RouteIntegrationResponse, ProblemDetails>({
       path: `/GetRoute`,
       method: 'POST',
       body: data,

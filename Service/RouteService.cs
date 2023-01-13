@@ -23,5 +23,12 @@ namespace EIT.Service
             var cityModels = _cityDao.GetAllCities();
             return _routeMapper.MapRouteModelsToDtos(routeModels, cityModels);
         }
+
+        public RouteDto GetInternalRoute(int from, int to)
+        {
+            var internalRoute = _routeDao.GetRoute(from, to);
+            var cityModels = _cityDao.GetAllCities();
+            return _routeMapper.MapRouteModelToDto(internalRoute, cityModels);
+        }
     }
 }
