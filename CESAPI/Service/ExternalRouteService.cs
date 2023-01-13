@@ -15,12 +15,12 @@ namespace CESAPI.Service
         {
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("http://localhost:6004/");
+                client.BaseAddress = new Uri("https://wa-tl-dk1.azurewebsites.net/api/GetRoute");
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Add("correlationID", Guid.NewGuid().ToString());
-                client.DefaultRequestHeaders.Add("collaborationID", "6b1af4a5-dd96-4f61-8631-69aabd684b2c");
-                var req = new RouteIntegrationRequest() 
+                client.DefaultRequestHeaders.Add("collaborationID", "f87c9339-ff39-4225-be09-fca238a03ede");
+                var req = new RouteIntegrationRequest()
                 {
                     From = findRouteDto.From,
                     To = findRouteDto.To,
@@ -44,7 +44,7 @@ namespace CESAPI.Service
                     return res;
                 }
                 return null;
-            }   
+            }
         }
     }
 }
