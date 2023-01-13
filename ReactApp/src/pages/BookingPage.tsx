@@ -9,14 +9,36 @@ import FrontServiceApi from "../services/FrontServiceApi";
 import {
   PackageTypeDto,
   RouteIntegrationRequest,
+  RouteIntegrationResponse,
 } from "../services/swaggerapi/data-contracts";
 import styled, { css } from "styled-components";
 import WhatComponent from "../components/WhatComponent";
+import WhoComponent from "../components/WhoComponent";
+import PriceAndRouteComponent from "../components/PriceAndRouteComponent";
+import SummaryComponent from "../components/SummaryComponent";
+
+interface SummaryProps {
+  OrderID: string
+  Package: string
+  Route: string
+  Prices: string
+  Customer: string
+}
+
+interface CustomerInfo {
+  Customer?: string | undefined
+  Phone?: string | undefined
+  EMail?: string | undefined
+}
 
 const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
   const [routeRequest, setRouteRequest] = useState<RouteIntegrationRequest>();
-  const [title, setTitle] = useState<string>("Title");
+  const [routeResponse, setRouteRespone] = useState<RouteIntegrationResponse>();
+  const [summary, setSummary] = useState<SummaryProps>();
+  const [title, setTitle] = useState<string>("Specify The Parameters of Your Parcel");
+  const [stage, setStage] = useState<number>(1);
+  const [customerInfo, setCustomerInfo] = useState<CustomerInfo>();
 
   const setDefaultRequest = () => {
     setRouteRequest({
@@ -32,7 +54,15 @@ const BookingPage = () => {
       depth: 0,
       recommended: false,
     });
+
+    setCustomerInfo({
+      ...customerInfo,
+      Customer: "",
+      Phone: "",
+      EMail: ""
+    });
   };
+
 
   useEffect(() => {
     const promise = FrontServiceApi.getAllPackageTypes();
@@ -47,12 +77,58 @@ const BookingPage = () => {
     setDefaultRequest();
   }, []);
 
-  const handleChange = (event) => {};
+  useEffect(() => {
+    switch(stage){
+      case 1:
+        setTitle("Specify The Parameters of Your Parcel")
+        return
+      case 2:
+        setTitle("Choose a Starting and Destination Point")
+        return
+      case 3:
+        if (routeRequest)
+        {
+          const promise = FrontServiceApi.getRoute(routeRequest);
+          promise
+          .then((response) => {
+            setRouteRespone(response.data);
+          })
+          .catch((reason) => {
+            console.log(reason);
+        });
+        }
+        setTitle("Choose a Preferable Route")
+         return
+      case 4:
+        setTitle("Customer Information")
+        return
+      case 5:
+        setTitle("Order Summary")
+        return
+      default:
+    }
+    
+  }, [stage]);
+
+  const handleChange = (event) => {
+    setRouteRequest({ ...routeRequest, ["type"]: event.target.value })
+  }
 
   const handlePackageInfoChange = (e) => {
-    setRouteRequest({ ...routeRequest, [e.target.name]: e.target.value });
-    console.info(routeRequest);
-  };
+    setRouteRequest({ ...routeRequest, [e.target.name]: e.target.value })
+  }
+
+  const handleCustomerInfoChange = (e) => {
+    setCustomerInfo({...customerInfo, [e.target.name]: e.target.value })
+  }
+
+  const handelStage = (value: number) => {
+    const newStage = stage + value;
+    if(newStage > 0 && newStage < 6)
+    {
+      setStage(newStage)
+    }
+  }
 
   return (
     <Page headerTitle={"Make a Package Delivery"}>
@@ -60,16 +136,36 @@ const BookingPage = () => {
         <Banner>
           <div>{title}</div>
         </Banner>
-        <MainView></MainView>
+        <MainView>
+          { stage == 1 &&
+            <WhatComponent InputData={routeRequest!} PackageTypes={packageTypes} handleInputChange={handlePackageInfoChange} onSelectClick={handleChange} />
+          }
+          { stage == 3 &&
+              <PriceAndRouteComponent from={routeRequest?.from!} to={routeRequest?.to!} price={routeResponse?.cost!} duration={routeResponse?.time!} />
+          }
+          { stage == 4 &&
+            <WhoComponent Customer={customerInfo!} handleInputChange={handleCustomerInfoChange} />
+          }
+          { stage == 5 &&
+            <SummaryComponent 
+              OrderID={summary?.OrderID!} 
+              Package={`${routeRequest?.type} - ${routeRequest?.weight}g`} 
+              Route = {`${routeRequest?.from} - ${routeRequest?.to}`}
+              Prices = {`${routeResponse?.cost}$`}
+              Customer = {`${customerInfo?.Customer} - ${customerInfo?.EMail} - ${customerInfo?.Phone}`}/>
+          }
+        </MainView>
         <ButtonContainer>
           <Button
             onClick={() => {
-              console.log("asd");
+              handelStage(-1);
             }}
           >
             Previous
           </Button>
-          <Button>Next</Button>
+          <Button onClick={() => {
+              handelStage(1);
+            }}>Next</Button>
         </ButtonContainer>
       </BookingView>
     </Page>
