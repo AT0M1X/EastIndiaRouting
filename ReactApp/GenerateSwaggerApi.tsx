@@ -7,7 +7,7 @@ generateApi({
   name: 'Api.ts',
   // set to `false` to prevent the tool from writing to disk
   output: path.resolve(process.cwd(), './src/services/swaggerapi'),
-  url: 'http://localhost:6004/swagger/v1/swagger.json',
+  url: 'https://wa-eit-dk1.azurewebsites.net/swagger/v1/swagger.json',
   apiclassname: 'Api',
   cleanOutput: true,
   rewrite: true,
