@@ -2,8 +2,14 @@ import React, { FunctionComponent } from "react";
 import Page from "../components/Page";
 import styled, { css } from "styled-components";
 import logo from "../assets/img/logo_2.png";
+import { useHistory } from "react-router-dom";
 
 const HomePage: FunctionComponent = () => {
+  const history = useHistory();
+
+  function navigateToLogin() {
+    history.push("/login");
+  }
   return (
     <Page headerTitle="East India Company">
       <LogoContainer>
@@ -21,7 +27,7 @@ const HomePage: FunctionComponent = () => {
           >
             Sign in To Book
           </Button>
-          <Button>Login</Button>
+          <Button onClick={navigateToLogin}>Login</Button>
         </ButtonContainer>
       </BottomContainer>
     </Page>
