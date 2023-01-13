@@ -30,6 +30,7 @@ interface CustomerInfo {
   Phone?: string | undefined
   EMail?: string | undefined
 }
+import FromToComponent from "../components/FromToComponent";
 
 const BookingPage = () => {
   const [packageTypes, setPackageTypes] = useState<PackageTypeDto[]>([]);
@@ -155,6 +156,7 @@ const BookingPage = () => {
               Customer = {`${customerInfo?.Customer} - ${customerInfo?.EMail} - ${customerInfo?.Phone}`}/>
           }
         </MainView>
+        <MainView><FromToComponent Cities={[{id: 1,name: 'stad'}, {id: 1,name: 'stad2'}]} onSelectClick={() => {}}></FromToComponent></MainView>
         <ButtonContainer>
           <Button
             onClick={() => {
@@ -185,7 +187,6 @@ const BookingView = styled.div`
 `;
 
 const MainView = styled.div`
-  height: 400px;
 `;
 
 const Button = styled.button`
@@ -195,7 +196,7 @@ const Button = styled.button`
   color: black;
   margin: 0.5em 1em;
   padding: 0.25em 1em;
-  hight: 50px;
+  height: 50px;
   width: 150px;
 `;
 
